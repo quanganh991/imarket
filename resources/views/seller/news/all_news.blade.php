@@ -91,7 +91,7 @@
 
                                                                     <div class="form-group">
                                                                         <label for="price" >Giá</label>
-                                                                        <input type="number" name="price" id="price">
+                                                                        <input type="number" step="0.0000000001" name="price" id="price">
                                                                     </div>
 
                                                                     <div class="form-group">
@@ -115,6 +115,13 @@
                                                                             @endforeach
                                                                         </select>
                                                                     </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="title_img">Ảnh/Video Thumbnail</label>
+                                                                        <textarea type="text" class="form-control"
+                                                                                  name="title_img" id="title_img" placeholder="Ảnh Thumbnail"></textarea>
+                                                                    </div>
+
                                                                     <div class="card-footer">
                                                                         <button type="submit" name="add_news"
                                                                                 class="btn btn-primary">Thêm bài đăng mới
@@ -149,6 +156,7 @@
                                 <th>Cập nhật gần nhất</th>
                                 <th>Loại tin</th>
                                 <th>Sản phẩm</th>
+                                <th>Thumbnail</th>
                                 <th>Sửa</th>
                             </tr>
                             </thead>
@@ -172,7 +180,10 @@
                                     </td>
                                     <td>
                                         <a style="color: rebeccapurple"
-                                           href="{{URL::to('/news-detail-'.$eachNews->id_news) }}">{{ $eachNews->location }}</a>
+                                           href="{{URL::to('/news-detail-'.$eachNews->id_news) }}">
+                                            {{strlen($eachNews->location) > 40 ? substr($eachNews->location,0,35).'...' : $eachNews->location}}
+
+                                        </a>
                                     </td>
                                     <td>
                                         <a href="{{URL::to('/news-detail-'.$eachNews->id_news) }}">
@@ -216,6 +227,12 @@
                                         $product = DB::table('product')->where('id_product',$eachNews->id_product)->get()->first();
                                         ?>
                                         {{ $product->product_name }}</td>
+
+                                    <td>
+                                            <img height="100px" width="100px"
+                                                 src="{{$eachNews->title_img}}">
+                                    </td>
+
                                     <td>
                                         <a href="{{URL::to('/seller-edit-news/'.$eachNews->id_news)}}">Sửa</a>
                                     </td>

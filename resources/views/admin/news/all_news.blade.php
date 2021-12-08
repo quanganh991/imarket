@@ -25,6 +25,7 @@
                                 <th>Cập nhật gần nhất</th>
                                 <th>Loại tin</th>
                                 <th>Sản phẩm</th>
+                                <th>Thumbnail</th>
                                 <th>Sửa</th>
                             </tr>
                             </thead>
@@ -48,7 +49,9 @@
                                     </td>
                                     <td>
                                         <a style="color: rebeccapurple"
-                                           href="{{URL::to('/news-detail-'.$eachNews->id_news) }}">{{ $eachNews->location }}</a>
+                                           href="{{URL::to('/news-detail-'.$eachNews->id_news) }}">
+                                            {{strlen($eachNews->location) > 50 ? substr($eachNews->location,0,45).'...' : $eachNews->location}}
+                                        </a>
                                     </td>
                                     <td>
                                         <a href="{{URL::to('/news-detail-'.$eachNews->id_news) }}">
@@ -92,6 +95,12 @@
                                         $product = DB::table('product')->where('id_product',$eachNews->id_product)->get()->first();
                                         ?>
                                         {{ $product->product_name }}</td>
+
+                                    <td>
+                                        <img height="100px" width="100px"
+                                             src="{{$eachNews->title_img}}">
+                                    </td>
+
                                     <td>
                                         <a href="{{URL::to('/admin-edit-news/'.$eachNews->id_news)}}">Sửa</a>
                                     </td>

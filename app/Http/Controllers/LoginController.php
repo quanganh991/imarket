@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request, Illuminate\Support\Facades\DB, Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class LoginController extends Controller
 {
@@ -31,17 +32,17 @@ class LoginController extends Controller
                 Session::put('id_buyer',$resultUser->id_user);
                 Session::remove('id_admin');
                 Session::remove('id_seller');
-                return view('buyer.home')->with('resultUser',$resultUser);
+                return Redirect::to('/');
             } else if($resultUser->type_of_user == 2){//nếu quản trị viên đăng nhập
                 Session::put('id_admin',$resultUser->id_user);
                 Session::remove('id_buyer');
                 Session::remove('id_seller');
-                return view('admin.home')->with('resultUser',$resultUser);
+                return Redirect::to('/welcome-admin');
             } else if($resultUser->type_of_user == 3){//nếu người bán đăng nhập
                 Session::put('id_seller',$resultUser->id_user);
                 Session::remove('id_admin');
                 Session::remove('id_buyer');
-                return view('seller.home')->with('resultUser',$resultUser);
+                return Redirect::to('/welcome-seller');
             }
         } else {
             $alert = 'Tài khoản hoặc mật khẩu không chính xác';

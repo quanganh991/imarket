@@ -130,11 +130,12 @@ class NewsController extends Controller
             $expired = $request->expired;
             $publish_date = $request->publish_date;
             $latest_update = date('Y-m-d H:i:s');
-            $type_of_news = $request->type_of_news;
+            $type_of_news = $request->type_of_news == null ? 'bán' : $request->type_of_news;
             $id_product = $request->id_product;
-            DB::insert('insert into news (id_news,id_branch_category,title,location,news_context,id_user,price,news_status,expired,publish_date,latest_update,type_of_news,id_product)
-                        values (?,?,?,?,?,?,?,?,?,?,?,?,?)'
-                , [$id_news,$id_branch_category,$title,$location,$news_context,$id_user,$price,$news_status,$expired,$publish_date,$latest_update,$type_of_news,$id_product]);
+            $title_img = $request->title_img;
+            DB::insert('insert into news (id_news,id_branch_category,title,location,news_context,id_user,price,news_status,expired,publish_date,latest_update,type_of_news,id_product,title_img)
+                        values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+                , [$id_news,$id_branch_category,$title,$location,$news_context,$id_user,$price,$news_status,$expired,$publish_date,$latest_update,$type_of_news,$id_product,$title_img]);
             return back();
         } else {
             return redirect('login');
@@ -177,6 +178,7 @@ class NewsController extends Controller
             $latest_update = date('Y-m-d H:i:s');
             $type_of_news = $request->type_of_news;
             $id_product = $request->id_product;
+            $title_img = $request->title_img;
 
             DB::table('news')->where('id_news', $id_news)
                 ->update([
@@ -193,6 +195,7 @@ class NewsController extends Controller
                     'latest_update' => $latest_update,
                     'type_of_news' => $type_of_news,
                     'id_product' => $id_product,
+                    'title_img' => $title_img,
                 ]);
 
             return Redirect::to('/seller-all-news');

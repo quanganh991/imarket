@@ -105,6 +105,12 @@
                                     </select>
                             </div>
 
+                            <div class="form-group">
+                                <label>Thumbnail</label>
+                                <textarea style="resize: none" rows="8" class="form-control" name="title_img"
+                                          id="title_img">{{$edit_news->title_img}}</textarea>
+                            </div>
+
                             <button type="submit" name="edit_submit" class="btn btn-info">Xác nhận sửa news</button>
                         </form>
                     </div>
