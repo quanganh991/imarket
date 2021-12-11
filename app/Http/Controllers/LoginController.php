@@ -60,8 +60,8 @@ class LoginController extends Controller
 
     public function logout(){
         Session::remove('id_user');
-        Session::remove('id_journalist');
-        Session::remove('id_customer');
+        Session::remove('id_buyer');
+        Session::remove('id_seller');
         Session::remove('id_admin');
         Session::remove('login');
         Session::remove('email');

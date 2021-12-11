@@ -32,26 +32,26 @@
                     <div class="header_top_left">
                         <ul class="top_nav">
                             <li><a href="{{URL::to('/')}}">Home</a></li>
-                            {{--                            @if(Session::get('id_user'))--}}
-                            {{--                                <li>--}}
-                            {{--                                    <a--}}
-                            {{--                                        <?php--}}
-                            {{--                                        $allUserNotification = DB::table('notification')    //lấy hết noti ra--}}
-                            {{--                                        ->join('users','notification.id_customer','=','users.id_user')--}}
-                            {{--                                            ->where('users.id_user', Session::get('id_user'))--}}
-                            {{--                                            ->where('notification.isread_noti','not seen')--}}
-                            {{--                                            ->orderBy('notification.date_noti','DESC')--}}
-                            {{--                                            ->get();--}}
-                            {{--                                        $cnt = count($allUserNotification); //số lượng thông báo mới--}}
-                            {{--                                        if($cnt) {--}}
-                            {{--                                            echo 'style="color: red"';--}}
-                            {{--                                        }--}}
-                            {{--                                        ?>--}}
-                            {{--                                        href="{{URL::to('/user-view-notification')}}">--}}
-                            {{--                                        Thông báo ({{$cnt}})--}}
-                            {{--                                    </a>--}}
-                            {{--                                </li>--}}
-                            {{--                            @endif--}}
+                                @if(Session::get('id_user'))
+                                    <li>
+                                        <a
+                                            <?php
+                                            $allUserNotification = DB::table('notification')    //lấy hết noti ra
+                                            ->join('users','notification.id_user','=','users.id_user')
+                                                ->where('users.id_user', Session::get('id_user'))
+                                                ->where('notification.is_read','not seen')
+                                                ->orderBy('notification.date_noti','DESC')
+                                                ->get();
+                                            $cnt = count($allUserNotification); //số lượng thông báo mới
+                                            if($cnt) {
+                                                echo 'style="color: red"';
+                                            }
+                                            ?>
+                                            href="{{URL::to('/user-view-notification')}}">
+                                            Thông báo ({{$cnt}})
+                                        </a>
+                                    </li>
+                                @endif
                             @if(!Session::get('id_user'))
                                 <li><a href="{{URL::to('/login')}}">Login</a></li>
                                 <li><a href="{{URL::to('/signup')}}">Signup</a></li>
@@ -128,7 +128,7 @@
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="header_bottom">
-                    <div class="logo_area"><a href="{{URL::to('/')}}" class="logo"><img src="public/newsfeed/images/logo.jpg" alt="IMarket"></a></div>
+                    <div class="logo_area"><a href="{{URL::to('/')}}" class="logo"><img height=72 width=123 src="public/newsfeed/images/imarket.png" alt="IMarket"></a></div>
                 </div>
             </div>
         </div>
@@ -140,19 +140,19 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav main_nav">
-                    <li class="active"><a href="public/newsfeed/index.html"><span class="fa fa-home desktop-home"></span><span class="mobile-show">Home</span></a></li>
+                    <li class="active"><a href="{{URL::to('/')}}"><span class="fa fa-home desktop-home"></span><span class="mobile-show">Home</span></a></li>
 
                     <?php
                     $all_main = DB::table('main_category')->get();
                     ?>
                     @foreach($all_main as $each_main)
-                        <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{$each_main->name_main}}</a>
+                        <li class="dropdown"> <a href="{{URL::to('/branch-result-'.$each_main->id_main_category)}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{$each_main->name_main}}</a>
                             <?php
                             $all_branch = DB::table('branch_category')->where('id_main_category',$each_main->id_main_category)->get();
                             ?>
                             <ul class="dropdown-menu" role="menu">
                                 @foreach($all_branch as $each_branch)
-                                    <li><a href="#">{{$each_branch->name_branch}}</a></li>
+                                    <li><a href="{{URL::to('/news-result-'.$each_branch->id_branch_category)}}">{{$each_branch->name_branch}}</a></li>
                                 @endforeach
                             </ul>
                         </li>
@@ -201,49 +201,46 @@
     @yield('home')
     @yield('login')
     @yield('signup')
+    @yield('news_detail')
+    @yield('branch_list')
+    @yield('news_list')
+    @yield('userInformation')
+    @yield('viewAllBookmark')
+    @yield('viewAllComment')
 
 
-
-
-<footer id="footer">
-    <div class="footer_top">
-        <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-4">
-                <div class="footer_widget wow fadeInLeftBig">
-                    <h2>Flickr Images</h2>
+    <footer id="footer">
+        <div class="footer_top">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="footer_widget wow fadeInDown">
+                        <h2>Tìm kiếm</h2>
+                        <ul class="tag_nav">
+                            <li>
+                                <form method="GET" action="{{URL::to('/search-news')}}">
+                                    <input required size="40" type="text" name="keyword" id="keyword"
+                                           placeholder="Tìm kiếm..."/>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4">
-                <div class="footer_widget wow fadeInDown">
-                    <h2>Tag</h2>
-                    <ul class="tag_nav">
-                        <li><a href="#">Games</a></li>
-                        <li><a href="#">Sports</a></li>
-                        <li><a href="#">Fashion</a></li>
-                        <li><a href="#">Business</a></li>
-                        <li><a href="#">Life &amp; Style</a></li>
-                        <li><a href="#">Technology</a></li>
-                        <li><a href="#">Photo</a></li>
-                        <li><a href="#">Slider</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4">
-                <div class="footer_widget wow fadeInRightBig">
-                    <h2>Contact</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                    <address>
-                        Perfect News,1238 S . 123 St.Suite 25 Town City 3333,USA Phone: 123-326-789 Fax: 123-546-567
-                    </address>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="footer_widget wow fadeInRightBig">
+                        <h2>Liên hệ</h2>
+                        <p>I Market</p>
+                        <address>
+                            Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội ,Điện thoại: 123-326-789 Đường dây nóng: 123-546-567
+                        </address>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="footer_bottom">
-        <p class="copyright">Copyright &copy; 2021 <a href="public/newsfeed/index.html">IMarket</a></p>
-        <p class="developer">All Rights Reserved</p>
-    </div>
-</footer>
+        <div class="footer_bottom">
+            <p class="copyright">Copyright &copy; 2021 <a href="{{URL::to('/')}}">I Market</a></p>
+            <p class="developer">Developed By Wpfreeware</p>
+        </div>
+    </footer>
 </div>
 <script src="public/newsfeed/assets/js/jquery.min.js"></script>
 <script src="public/newsfeed/assets/js/wow.min.js"></script>

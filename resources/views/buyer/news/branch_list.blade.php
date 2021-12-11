@@ -1,4 +1,4 @@
-@extends('welcome')
+@extends('header_footer')
 @section('branch_list')
     <section id="sliderSection">
         <div class="row">
@@ -7,32 +7,19 @@
                     <ol class="breadcrumb">
                         <li><a href="{{URL::to('/')}}">Trang chủ</a></li>
                         <li style="color: yellow">
-                            {{$mainSearch->name_main}}
+                            Các bài viết trong main {{$mainSearch->name_main}}
                         </li>
                     </ol>
                     @foreach($newsSearch as $eachOfNewsSearch)
                         <div class="single_iteam"><a href="{{URL::to('/news-detail-'.$eachOfNewsSearch->id_news)}}">
-                            @if($eachOfNewsSearch->id_typeofnews != 3) <!--Ko phải Video-->
-                                <img
-                                    src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfNewsSearch->multimedia)))[0] ?>"
-                                    alt="">
-                            @elseif($eachOfNewsSearch->id_typeofnews == 3)  <!--Video-->
-                                <?php
-                                $allMultimedia = explode("***<paragraph/>***", nl2br($eachOfNewsSearch->multimedia)); //tách tất cả video trong mỗi bản tin
-                                ?>
-                                <iframe width="705" height="450"
-                                        src="{{$allMultimedia[0]}}"
-                                        frameborder="0"
-                                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen>
-                                </iframe>
-                                @endif
+                                <img href="{{URL::to('/news-detail-'.$eachOfNewsSearch->id_news)}}"
+                                     src="{{$eachOfNewsSearch->title_img}}">
                             </a>
                             <div class="slider_article">
                                 <h2><a class="slider_tittle"
                                        href="{{URL::to('/news-detail-'.$eachOfNewsSearch->id_news)}}">{{$eachOfNewsSearch->title}}</a>
                                 </h2>
-                                <p>{{strlen($eachOfNewsSearch->context) > 200 ? substr($eachOfNewsSearch->context,0,200).'...' : $eachOfNewsSearch->context}}</p>
+                                <p>{{strlen($eachOfNewsSearch->news_context) > 200 ? substr($eachOfNewsSearch->news_context,0,200).'...' : $eachOfNewsSearch->news_context}}</p>
                             </div>
                         </div>
                     @endforeach
@@ -40,17 +27,14 @@
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4">
                 <div class="latest_post">
-                    <h2><span>Bài viết mới nhất về {{$mainSearch->name_main}}</span></h2>
+                    <h2><span>Mới nhất về {{$mainSearch->name_main}}</span></h2>
                     <div class="latest_post_container">
                         <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
                         <ul class="latest_postnav">
                             @foreach($newsSearch as $key => $eachOfNewsSearch)
                                 <li>
-                                    <div class="media"><a href="{{URL::to('/news-detail-'.$eachOfNewsSearch->id_news)}}"
-                                                          class="media-left">
-                                            <img alt=""
-                                                 src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfNewsSearch->multimedia)))[0] ?>">
-                                        </a>
+                                    <div class="media"><a href="{{URL::to('/news-detail-'.$eachOfNewsSearch->id_news)}}" class="media-left">
+                                            <img alt="" src="{{$eachOfNewsSearch->title_img}}"></a>
                                         <div class="media-body"><a
                                                 href="{{URL::to('/news-detail-'.$eachOfNewsSearch->id_news)}}"
                                                 class="catg_title">
@@ -80,28 +64,13 @@
                                             ->where('id_branch_category', $branchSearch[0]->id_branch_category)->get()->first();
                                         ?>
                                         @if($newSearch2 != null)
-                                            <figure class="bsbig_fig"><a
-                                                    href="{{URL::to('/news-detail-'.$newSearch2->id_news)}}"
-                                                    class="featured_img">
-                                                @if($newSearch2->id_typeofnews != 3) <!--Ko phải Video-->
-                                                    <img alt=""
-                                                         src="<?php echo (explode("***<paragraph/>***", nl2br($newSearch2->multimedia)))[0] ?>">
-                                                @elseif($newSearch2->id_typeofnews == 3)  <!--Video-->
-                                                    <?php
-                                                    $allMultimedia = explode("***<paragraph/>***", nl2br($newSearch2->multimedia)); //tách tất cả video trong mỗi bản tin
-                                                    ?>
-                                                    <iframe width="340" height="230"
-                                                            src="{{$allMultimedia[0]}}"
-                                                            frameborder="0"
-                                                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                                            allowfullscreen>
-                                                    </iframe>
-                                                    @endif
+                                            <figure class="bsbig_fig"><a href="{{URL::to('/news-detail-'.$newSearch2->id_news)}}" class="featured_img">
+                                                    <img src="{{$newSearch2->title_img}}">
                                                     <span class="overlay"></span> </a>
                                                 <figcaption><a
                                                         href="{{URL::to('/news-detail-'.$newSearch2->id_news)}}">{{$newSearch2->title}}</a>
                                                 </figcaption>
-                                                <p>{{strlen($newSearch2->context) > 100 ? substr($newSearch2->context,0,100).'...' : $newSearch2->context}}</p>
+                                                <p>{{strlen($newSearch2->news_context) > 100 ? substr($newSearch2->news_context,0,100).'...' : $newSearch2->news_context}}</p>
                                             </figure>
                                         @endif
                                     </li>
@@ -122,7 +91,7 @@
                                                     <a href="{{URL::to('/news-detail-'.$eachOfNewsSearch3->id_news)}}"
                                                        class="media-left">
                                                         <img alt=""
-                                                             src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfNewsSearch3->multimedia)))[0] ?>">
+                                                             src="{{$eachOfNewsSearch3->title_img}}">
                                                     </a>
                                                     <div class="media-body"><a
                                                             href="{{URL::to('/news-detail-'.$eachOfNewsSearch3->id_news)}}"
@@ -150,25 +119,13 @@
                                                 <figure class="bsbig_fig"><a
                                                         href="{{URL::to('/news-detail-'.$newsSearch4->id_news)}}"
                                                         class="featured_img">
-                                                    @if($newsSearch4->id_typeofnews != 3) <!--Ko phải Video-->
                                                         <img alt=""
-                                                             src="<?php echo (explode("***<paragraph/>***", nl2br($newsSearch4->multimedia)))[0] ?>">
-                                                    @elseif($newsSearch4->id_typeofnews == 3)  <!--Video-->
-                                                        <?php
-                                                        $allMultimedia = explode("***<paragraph/>***", nl2br($newsSearch4->multimedia)); //tách tất cả video trong mỗi bản tin
-                                                        ?>
-                                                        <iframe width="340" height="230"
-                                                                src="{{$allMultimedia[0]}}"
-                                                                frameborder="0"
-                                                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                                                allowfullscreen>
-                                                        </iframe>
-                                                        @endif
+                                                             src="{{$newsSearch4->title_img}}">
                                                         <span class="overlay"></span> </a>
                                                     <figcaption><a
                                                             href="{{URL::to('/news-detail-'.$newsSearch4->id_news)}}">{{$newsSearch4->title}}</a>
                                                     </figcaption>
-                                                    <p>{{strlen($newsSearch4->context) > 100 ? substr($newsSearch4->context,0,100).'...' : $newsSearch4->context}}</p>
+                                                    <p>{{strlen($newsSearch4->news_context) > 100 ? substr($newsSearch4->news_context,0,100).'...' : $newsSearch4->news_context}}</p>
                                                 </figure>@endif
                                         </li>
                                     </ul>
@@ -185,7 +142,7 @@
                                                     <div class="media wow fadeInDown"><a
                                                             href="{{URL::to('/news-detail-'.$eachOfNewsSearch5->id_news)}}"
                                                             class="media-left"> <img alt=""
-                                                                                     src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfNewsSearch5->multimedia)))[0] ?>">
+                                                                                     src="{{$eachOfNewsSearch5->title_img}}">
                                                         </a>
                                                         <div class="media-body"><a
                                                                 href="{{URL::to('/news-detail-'.$eachOfNewsSearch5->id_news)}}"
@@ -212,25 +169,13 @@
                                                 <figure class="bsbig_fig wow fadeInDown"><a
                                                         href="{{URL::to('/news-detail-'.$newsSearch6->id_news)}}"
                                                         class="featured_img">
-                                                    @if($newsSearch6->id_typeofnews != 3) <!--Ko phải Video-->
                                                         <img alt=""
-                                                             src="<?php echo (explode("***<paragraph/>***", nl2br($newsSearch6->multimedia)))[0] ?>">
-                                                    @elseif($newsSearch6->id_typeofnews == 3)  <!--Video-->
-                                                        <?php
-                                                        $allMultimedia = explode("***<paragraph/>***", nl2br($newsSearch6->multimedia)); //tách tất cả video trong mỗi bản tin
-                                                        ?>
-                                                        <iframe width="340" height="230"
-                                                                src="{{$allMultimedia[0]}}"
-                                                                frameborder="0"
-                                                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                                                allowfullscreen>
-                                                        </iframe>
-                                                        @endif
+                                                             src="{{$newsSearch6->title_img}}">
                                                         <span class="overlay"></span> </a>
                                                     <figcaption><a
                                                             href="{{URL::to('/news-detail-'.$newsSearch6->id_news)}}">{{$newsSearch6->title}}</a>
                                                     </figcaption>
-                                                    <p>{{strlen($newsSearch6->context) > 100 ? substr($newsSearch6->context,0,100).'...' : $newsSearch6->context}}</p>
+                                                    <p>{{strlen($newsSearch6->news_context) > 100 ? substr($newsSearch6->news_context,0,100).'...' : $newsSearch6->news_context}}</p>
                                                 </figure>@endif
                                         </li>
                                     </ul>
@@ -247,7 +192,7 @@
                                                     <div class="media wow fadeInDown"><a
                                                             href="{{URL::to('/news-detail-'.$eachOfNewsSearch7->id_news)}}"
                                                             class="media-left"> <img alt=""
-                                                                                     src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfNewsSearch7->multimedia)))[0] ?>">
+                                                                                     src="{{$eachOfNewsSearch7->title_img}}">
                                                         </a>
                                                         <div class="media-body"><a
                                                                 href="{{URL::to('/news-detail-'.$eachOfNewsSearch7->id_news)}}"
@@ -263,66 +208,36 @@
                         </div>
                     </div>
                     <div class="single_post_content">
-                        <h2><span>Ảnh</span></h2>
+                        <h2><span>Ảnh/Video về Sản phẩm</span></h2>
                         <ul class="photograph_nav  wow fadeInDown">
-                            @foreach($newsSearchImageOnly as $eachOfNewsSearchImageOnly)
+                            @foreach($newsSearchProductImageOnly as $eachOfNewsSearchProductImageOnly)
                                 <li>
+                                    <?php
+                                        $product = DB::table('product')
+                                            ->where('id_product',$eachOfNewsSearchProductImageOnly->id_product)
+                                            ->get()
+                                            ->first();  //lấy ra product duy nhất ứng với news
+                                        $img = DB::table('multimedia')
+                                            ->where('id_product',$product->id_product)
+                                            ->where('type_multi',1)
+                                            ->get();    //lấy ra tất cả hình ảnh
+                                    ?>
+                                    @foreach($img as $each_img)
                                     <div class="photo_grid">
                                         <figure class="effect-layla">
                                             <a class="fancybox-buttons" data-fancybox-group="button"
-                                               href="{{URL::to('/news-detail-'.$eachOfNewsSearchImageOnly->id_news)}}"
-                                               title="<?php echo (explode("***<paragraph/>***", nl2br($eachOfNewsSearchImageOnly->describ_multimedia)))[0] ?>">
+                                               href="{{URL::to('/news-detail-'.$eachOfNewsSearchProductImageOnly->id_news)}}"
+                                               title="{{$eachOfNewsSearchProductImageOnly->title}}">
                                                 <img
-                                                    src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfNewsSearchImageOnly->multimedia)))[0] ?>"
+                                                    src="{{$each_img->url_multi}}"
                                                     alt=""/>
                                             </a>
                                         </figure>
                                     </div>
+                                    @endforeach
                                 </li>
                             @endforeach
                         </ul>
-                    </div>
-                    <div class="single_post_content">
-                        <h2><span>Khảo sát độc giả/ Trắc nghiệm</span></h2>
-                        <div class="single_post_content_left">
-                            <ul class="business_catgnav">
-                                <li>
-                                    @if(count($newsSearchMultipleChoice)>0)
-                                        <figure class="bsbig_fig  wow fadeInDown"><a class="featured_img"
-                                                                                     href="{{URL::to('/news-detail-'.$newsSearchMultipleChoice[0]->id_news)}}">
-                                                <img
-                                                    src="<?php echo (explode("***<paragraph/>***", nl2br($newsSearchMultipleChoice[0]->multimedia)))[0] ?>"
-                                                    alt=""> <span
-                                                    class="overlay"></span> </a>
-                                            <figcaption><a
-                                                    href="{{URL::to('/news-detail-'.$newsSearchMultipleChoice->id_news)}}">{{$newsSearchMultipleChoice[0]->title}}</a>
-                                            </figcaption>
-                                            <p>{{strlen($newsSearchMultipleChoice[0]->context) > 100 ? substr($newsSearchMultipleChoice[0]->context,0,100).'...' : $newsSearchMultipleChoice[0]->context}}</p>
-                                        </figure>
-                                    @endif
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="single_post_content_right">
-                            <ul class="spost_nav">
-                                @foreach($newsSearchMultipleChoice as $key => $eachOfNewsSearchMultipleChoice)
-                                    @if($key>0)
-                                        <li>
-                                            <div class="media wow fadeInDown"><a
-                                                    href="{{URL::to('/news-detail-'.$eachOfNewsSearchMultipleChoice->id_news)}}"
-                                                    class="media-left"> <img alt=""
-                                                                             src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfNewsSearchMultipleChoice->multimedia)))[0] ?>">
-                                                </a>
-                                                <div class="media-body"><a
-                                                        href="{{URL::to('/news-detail-'.$eachOfNewsSearchMultipleChoice->id_news)}}"
-                                                        class="catg_title">{{$eachOfNewsSearchMultipleChoice->title}}</a>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -331,17 +246,17 @@
                     <div class="single_sidebar">
                         <h2><span>Phổ biến nhất về {{$mainSearch->name_main}}</span></h2>
                         <ul class="spost_nav">
-                            @foreach($newsSearchPopular as $eachNewsSearchPopular)
+                            @foreach($newsSearchCheapest as $eachNewsSearchCheapest)
                                 <li>
                                     <div class="media wow fadeInDown"><a
-                                            href="{{URL::to('/news-detail-'.$eachNewsSearchPopular->id_news)}}"
+                                            href="{{URL::to('/news-detail-'.$eachNewsSearchCheapest->id_news)}}"
                                             class="media-left"> <img alt=""
-                                                                     src="<?php echo (explode("***<paragraph/>***", nl2br($eachNewsSearchPopular->multimedia)))[0] ?>">
+                                                                     src="{{$eachNewsSearchCheapest->title_img}}">
                                         </a>
                                         <div class="media-body"><a
-                                                href="{{URL::to('/news-detail-'.$eachNewsSearchPopular->id_news)}}"
+                                                href="{{URL::to('/news-detail-'.$eachNewsSearchCheapest->id_news)}}"
                                                 class="catg_title">
-                                                {{$eachNewsSearchPopular->title}}</a></div>
+                                                {{$eachNewsSearchCheapest->title}}</a></div>
                                     </div>
                                 </li>
                             @endforeach
@@ -350,8 +265,7 @@
                     <div class="single_sidebar">
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active"><a href="#category" aria-controls="home" role="tab"
-                                                                      data-toggle="tab">Chuyên
-                                    mục {{$mainSearch->name_main}}</a></li>
+                                                                      data-toggle="tab">Chuyên mục {{$mainSearch->name_main}}</a></li>
                             <li role="presentation"><a href="#video" aria-controls="profile" role="tab"
                                                        data-toggle="tab">Video về {{$mainSearch->name_main}}</a></li>
                             <li role="presentation"><a href="#comments" aria-controls="messages" role="tab"
@@ -370,20 +284,26 @@
                             </div>
                             <div role="tabpanel" class="tab-pane" id="video">   <!--Video trong cùng main-->
                                 <div class="vide_area">
-                                    @foreach($newsSearchVideoOnly as $eachOfNewsSearchVideoOnly)
+                                    @foreach($newsSearchProductVideoOnly as $eachOfNewsSearchProductVideoOnly)
                                         <?php
-                                        $allMultimedia = explode("***<paragraph/>***", nl2br($eachOfNewsSearchVideoOnly->multimedia)); //tách tất cả video trong mỗi bản tin
-                                        $allDescribMultimedia = explode("***<paragraph/>***", nl2br($eachOfNewsSearchVideoOnly->describ_multimedia)); //tách tất cả mô tả video trong mỗi bản tin
+                                        $product = DB::table('product')
+                                            ->where('id_product',$eachOfNewsSearchProductVideoOnly->id_product)
+                                            ->get()
+                                            ->first();  //lấy ra product duy nhất ứng với news
+                                        $vid = DB::table('multimedia')
+                                            ->where('id_product',$product->id_product)
+                                            ->where('type_multi',2)
+                                            ->get();    //lấy ra tất cả Video
                                         ?>
-                                        @for($index = 0; $index < count($allMultimedia) ; $index++)
+                                        @foreach($vid as $each_vid)
                                             <iframe width="560" height="315"
-                                                    src="{{$allMultimedia[$index]}}"
+                                                    src="{{$each_vid->url_multi}}"
                                                     frameborder="0"
                                                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                                     allowfullscreen>
-                                                {{$allDescribMultimedia[$index]}}
+                                                {{$eachOfNewsSearchProductVideoOnly->title}}
                                             </iframe>
-                                        @endfor
+                                        @endforeach
                                     @endforeach
                                 </div>
                             </div>
@@ -401,7 +321,7 @@
                                                 <div class="media wow fadeInDown"><a
                                                         href="{{URL::to('/news-detail-'.$eachOfComment->id_news)}}"
                                                         class="media-left"> <img alt=""
-                                                                                 src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfNewsSearch->multimedia)))[0] ?>">
+                                                                                 src="{{$eachOfNewsSearch->title_img}}">
                                                     </a>
                                                     <?php
                                                     $commentPeople = DB::table('users')
@@ -420,64 +340,6 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                    <div class="single_sidebar wow fadeInDown">
-                        <h2><span>Đại dịch Covid-19</span></h2>
-                        <div style="height: 350px; overflow: scroll">
-                            <?php
-                            $url = 'https://tygia.com/app/covid-19/api.json?type=2';
-                            $ch = curl_init();
-                            curl_setopt($ch, CURLOPT_URL, $url);
-                            curl_setopt($ch, CURLOPT_HTTPHEADER, Array("User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.15) Gecko/20080623 Firefox/2.0.0.15"));
-                            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-                            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                            $result = curl_exec($ch);
-                            curl_close($ch);
-                            $info = json_decode($result, true);
-                            ?>
-                            <table style="border: 1px solid black">
-                                <tr style="border: white">
-                                    <th style="border: 1px solid black; color: #fd7605">Nghiêm trọng</th>
-                                    <th style="border: 1px solid black; color: red">Tử vong</th>
-                                    <th style="border: 1px solid black; color: green">Khỏi bệnh</th>
-                                    <th style="border: 1px solid black;  color: blue">Nhiễm</th>
-                                    <th style="border: 1px solid black">Quốc gia</th>
-                                </tr>
-                                @for ($i = 1; $i < count($info["items"]); $i++)
-                                    <tr style="border: white">
-                                        @foreach ($info["items"][$i] as $key => $value)
-                                            @if ($key != "changed")
-                                                <th style="border: 1px solid black">
-                                                    <?php print_r($value . "\t" . " ") // print all data
-                                                    ?>
-                                                </th>
-                                            @endif
-                                        @endforeach
-                                    </tr>
-                                @endfor
-                            </table>
-                        </div>
-                    </div>
-                    <div class="single_sidebar wow fadeInDown">
-                        <h2><span>Danh mục khác</span></h2>
-                        <select class="catgArchive">
-                            <option>Danh mục khác</option>
-                            <?php
-                            $main = DB::table('main_category')->get();
-                            ?>
-                            @foreach($main as $eachOfMain)
-                                <option>{{$eachOfMain->name_main}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="single_sidebar wow fadeInDown">
-                        <h2><span>Thời tiết - Giá Vàng - Tỷ giá</span></h2>
-                        <iframe frameborder="0" marginwidth="0" marginheight="0"
-                                src="http://thienduongweb.com/tool/weather/?r=1&w=1&g=1&d=0" width="100%" height="370"
-                                scrolling="yes"></iframe>
-
                     </div>
                 </aside>
             </div>

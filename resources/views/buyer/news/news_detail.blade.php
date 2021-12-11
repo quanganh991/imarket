@@ -1,4 +1,4 @@
-@extends('welcome')
+@extends('header_footer')
 @section('news_detail')
     <section id="contentSection">
         <div class="row">
@@ -16,11 +16,11 @@
                         </ol>
                         <p style="color: saddlebrown; font-size: 35px; font-weight: bold">{{$newsDetail->title}}</p>
                         <?php
-                        $journal = DB::table('users')
-                            ->where('id_user', $newsDetail->id_journalist)
-                            ->get()->first();   //lấy tác giả của bài viết
+                        $author = DB::table('users')
+                            ->where('id_user', $newsDetail->id_user)
+                            ->get()->first();   //lấy tác giả của bài đăng
                         ?>
-                        <div class="post_commentbox"><a href="#"><i class="fa fa-user"></i>{{$journal->name_user}}</a>
+                        <div class="post_commentbox"><a href="#"><i class="fa fa-user"></i>{{$author->name_user}}</a>
                             <span><i
                                     class="fa fa-calendar"></i>{{$newsDetail->latest_update}}
                             </span>
@@ -28,84 +28,70 @@
                                     class="fa fa-tags"></i>{{$newsDetailBranch->name_branch}}
                             </a>
                         </div>
+
                         <div class="single_page_content">
-                            <?php
-                            //cả 3 biến dưới đây là kiểu mảng
-                            $allParagraph = explode("***<paragraph/>***", nl2br($newsDetail->context)); //tách đoạn
-                            $allMultimedia = explode("***<paragraph/>***", nl2br($newsDetail->multimedia)); //tách đa phương tiện
-                            $allDescribMultimedia = explode("***<paragraph/>***", nl2br($newsDetail->describ_multimedia)); //tách mô tả đa phương tiện
-                            ?>
+                            <div class="slick_slider">
 
-                            @for($i=0;$i<max(count($allMultimedia),count($allParagraph),count($allDescribMultimedia));$i++)
-                                @if($i < count($allParagraph))
-                                    <p><?php echo $allParagraph[$i] ?></p>
-                                @endif
-                                @if($i < count($allMultimedia) )
-                                    @if($newsDetail->id_typeofnews != 3)
-                                        <img class="img-center" src="<?php echo $allMultimedia[$i] ?>" alt="">
-                                    @elseif($newsDetail->id_typeofnews == 3)
-                                        <iframe width="560" height="315"
-                                                src="{{$allMultimedia[$i]}}"
-                                                frameborder="0"
-                                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                                allowfullscreen>
-                                            {{$allDescribMultimedia[$i]}}
-                                        </iframe>
-                                    @endif
-                                @endif
-                                @if($i < count($allDescribMultimedia))
-                                    <p style="background: #D6E1D1"><?php echo $allDescribMultimedia[$i] ?></p>
-                                @endif
-                            @endfor
-                            {{--chứa nội dung--}}
-                        <!--Nếu tin tức là trắc nghiệm thì sẽ có mục này-->
-                            @if($newsDetail->id_typeofnews == 4)
+                                <div class="single_iteam"><a href="{{URL::to('/news-detail-'.$newsDetail->id_news)}}">
+                                        <img href="{{URL::to('/news-detail-'.$newsDetail->id_news)}}"
+                                             src="{{$newsDetail->title_img}}">
+                                    </a>
+                                    <div class="slider_article">
+                                        <h2><a class="slider_tittle"
+                                               href="{{URL::to('/news-detail-'.$newsDetail->id_news)}}"></a>
+                                        </h2>
+                                        <p></p>
+                                    </div>
+                                </div>
+
                                 <?php
-                                $multiple_choice = DB::table('multiple_choice')
-                                    ->where('id_news', $newsDetail->id_news)
-                                    ->get();
+                                $product = DB::table('product')
+                                    ->where('id_product',$newsDetail->id_product)
+                                    ->get()
+                                    ->first();  //lấy ra product duy nhất ứng với news
+                                $img = DB::table('multimedia')
+                                    ->where('id_product',$product->id_product)
+                                    ->where('type_multi',1)
+                                    ->get();    //lấy ra tất cả hình ảnh
+                                $vid = DB::table('multimedia')
+                                    ->where('id_product',$product->id_product)
+                                    ->where('type_multi',2)
+                                    ->get();    //lấy ra tất cả video
                                 ?>
-                                <form action="{{URL::to('/check-multiple-choice')}}">
-                                    @foreach($multiple_choice as $key => $eachOfMultipleChoice)
-                                        <p  style="color: purple; font-size: 25px; font-weight: bold;">Câu hỏi {{$eachOfMultipleChoice->stt}}: </p>
-                                        <p>{{$eachOfMultipleChoice->question}}</p>
 
-                                        <input type="radio" id="A" name="choice[{{$key}}]" value="A">
-                                        <label for="A">A. {{$eachOfMultipleChoice->a_answer}}</label><br>
+                                @foreach($vid as $each_of_vid)
+                                    <div class="single_iteam">
+                                        <div class="slider_article">
+                                            <iframe
+                                                width="705" height="450"
+                                                    src="{{$each_of_vid->url_multi}}"
+                                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowfullscreen>
+                                            </iframe>
+                                        </div>
+                                    </div>
+                                @endforeach
 
-                                        <input type="radio" id="B" name="choice[{{$key}}]" value="B">
-                                        <label for="B">B. {{$eachOfMultipleChoice->b_answer}}</label><br>
+                                @foreach($img as $each_of_img)
+                                    <div class="single_iteam"><a href="{{$each_of_img->url_multi}}">
+                                            <img href="{{$each_of_img->url_multi}}"
+                                                 src="{{$each_of_img->url_multi}}">
+                                        </a>
+                                        <div class="slider_article">
+                                            <h2><a class="slider_tittle"
+                                                   href="{{URL::to('/news-detail-'.$newsDetail->id_news)}}"></a>
+                                            </h2>
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
 
-                                        <input type="radio" id="C" name="choice[{{$key}}]" value="C">
-                                        <label for="C">C. {{$eachOfMultipleChoice->c_answer}}</label><br>
 
-                                        <input type="radio" id="D" name="choice[{{$key}}]" value="D">
-                                        <label for="D">D. {{$eachOfMultipleChoice->d_answer}}</label><br>
-                                        <br><br>
-                                    @endforeach
-                                    <input type="hidden" name="id_news" value="{{$newsDetail->id_news}}">
-                                    <button>Gửi đáp án</button>
-                                </form>
-                            @endif
-                        <!--Nếu tin tức là trắc nghiệm thì sẽ có mục này-->
-                            <!--Nếu tin tức là dạng sự kiện/ trận đấu thì sẽ có mục này-->
-                            @if($newsDetail->id_typeofnews == 7)
+                            @if(Session::get('id_buyer'))
                                 <?php
-                                $tournament = DB::table('tournament')
-                                    ->where('id_news', $newsDetail->id_news)
-                                    ->get()->first();
-                                ?>
-                                <a style="color: blue"
-                                   href="{{URL::to('/detail-tournament-'.$tournament->id_tournament)}}">Xem chi
-                                    tiết: {{$tournament->name_tournament}}</a>
-                            @endif
-                        <!--Nếu tin tức là dạng sự kiện/ trận đấu thì sẽ có mục này-->
-                            @if(Session::get('id_customer'))
-                                <?php
-                                $allMultimedia = explode("***<paragraph/>***", nl2br($newsDetail->multimedia)); //tách đa phương tiện
-                                $allDescribMultimedia = explode("***<paragraph/>***", nl2br($newsDetail->describ_multimedia)); //tách mô tả đa phương tiện
                                 $isSaved = DB::table('bookmarked')
-                                    ->where('id_customer', Session::get('id_customer'))
+                                    ->where('id_customer', Session::get('id_buyer'))
                                     ->where('id_news', $newsDetail->id_news)
                                     ->get();
                                 ?>
@@ -117,14 +103,22 @@
                                 @else
                                     <form action="{{URL::to('/unbookmark')}}" method="get">
                                         <input name="id_news" value="{{$newsDetail->id_news}}" type="hidden"/>
-                                        <button class="btn default-btn">Bỏ lưu bài viết</button>
+                                        <button style="background-color: red" class="btn default-btn">Bỏ lưu bài viết</button>
                                     </form>
                                 @endif
                             @endif
-                            {{--                            <button class="btn btn-red">Red Button</button>--}}
+{{--                            <button class="btn btn-red">Red Button</button>--}}
                         </div>
+
+
+                        <p style="color: orangered; font-size: 25px; font-weight: bold" >Thông tin:</p>
+
+
+                        <p style="color: #0b5509">{{$newsDetail->news_context}}</p>
+
+
                         <!--Bình luận-->
-                        <p style="color: orangered; font-size: 35px; font-weight: bold" >Bình luận:</p>
+                        <p style="color: orangered; font-size: 25px; font-weight: bold" >Bình luận:</p>
                         <?php
                         if (Session::get('id_user')) {
                         ?>
@@ -147,6 +141,7 @@
                             ->get();
                         ?>
                         @foreach($commentList as $eachCommentList)
+                            @if($eachCommentList->status_user == 1 && $eachCommentList->is_valid_coment == 1)
                             <row>
                             <?php
                             $user = DB::table('users') //chứa coment của độc giả
@@ -155,88 +150,91 @@
                             ?>
                             @if($user->status_user == 1)    <!--Nếu ko bị khóa tài khoản thì mới hiển thị bình luận-->
                                 <hr>
-                                @if($user->type_of_user != 'admin')
+                                @if($user->type_of_user != 2)
                                     <p style="color: #2b527e; font-size: 20px; font-weight: bold">{{$eachCommentList->name_user}}</p>
-                                @elseif($user->type_of_user == 'admin')
+                                @elseif($user->type_of_user == 2)
                                     <p style="color: red; font-size: 20px; font-weight: bold">Admin: {{$eachCommentList->name_user}}</p>
                                 @endif
                                 <p style="color: red; font-size: 15px; font-weight: bold"><i class="fa fa-comment"
                                        aria-hidden="true"></i> {{$eachCommentList->context_coment}}</p>
-                                @endif
-                                @if(Session::get('id_admin'))
-                                    <a href="{{URL::to('/delete-comment/'.$eachCommentList->id_coment)}}">Xóa
-                                        comment</a>
-                                    |
-                                    <a href="{{URL::to('/block-user/'.$eachCommentList->id_customer)}}">Khóa tài
-                                        khoản</a>
-                                @endif
+                            @endif
+
+                            @if(Session::get('id_admin'))
+                                <a href="{{URL::to('/admin-delete-comment/'.$eachCommentList->id_coment)}}">Xóa
+                                    comment</a>
+                                |
+                                <a href="{{URL::to('/admin-block-user/'.$eachCommentList->id_customer)}}">Khóa tài
+                                    khoản</a>
+                            @endif
                             </row>
                             {{-- 2 sự lựa chọn: Trả lời bình luận và xem các câu trả lời--}}
-                            <li class="dropdown">
-                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false" style="color: green">
-                                    Trả lời {{$eachCommentList->name_user}}
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <form class="dropdown-item" action="{{URL::to('/reply')}}" method="GET">
-                                        <textarea name="reply" placeholder="Bình luận" rows="6" cols="50"></textarea>
-                                        <input name="commentid_hidden" type="hidden"
-                                               value="{{$eachCommentList->id_coment}}"/>
-                                        <input id="userid_hidden" name="userid_hidden" type="hidden"
-                                               value="{{Session::get('id_user')}}"/>
-                                        <br>
-                                        <button type="submit" class="btn-template-main">Gửi trả lời</button>
-                                    </form>
-                                </div>
-                            </li>
-                            <!--Reply-->
-                            <li class="dropdown">
-                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false" style="color: green">
-                                    Xem các phản hồi về bình luận
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <?php
-                                    $reply = DB::table('reply')
-                                        ->where('id_coment', $eachCommentList->id_coment)
-                                        ->get();
-                                    ?>
-                                    @foreach($reply as $eachOfReply)
+                                <li class="dropdown">
+                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false" style="color: green">
+                                        Trả lời {{$eachCommentList->name_user}}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <form class="dropdown-item" action="{{URL::to('/reply')}}" method="GET">
+                                            <textarea name="reply" placeholder="Bình luận" rows="6" cols="50"></textarea>
+                                            <input name="commentid_hidden" type="hidden"
+                                                   value="{{$eachCommentList->id_coment}}"/>
+                                            <input id="userid_hidden" name="userid_hidden" type="hidden"
+                                                   value="{{Session::get('id_user')}}"/>
+                                            <br>
+                                            <button type="submit" class="btn-template-main">Gửi trả lời</button>
+                                        </form>
+                                    </div>
+                                </li>
+                                <!--Reply-->
+                                <li class="dropdown">
+                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false" style="color: green">
+                                        Xem các phản hồi về bình luận
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <?php
-                                        $userRep = DB::table('users') //chứa reply của độc giả
-                                        ->where('id_user', $eachOfReply->id_customer)
-                                            ->get()->first();
+                                        $reply = DB::table('reply')
+                                            ->where('id_coment', $eachCommentList->id_coment)
+                                            ->get();
                                         ?>
-                                        @if($userRep->status_user == 1)
-                                            @if($userRep->type_of_user != 'admin')
-                                                <p style="color: white; font-size: 20px; font-weight: bold" class="dropdown-item">{{$userRep->name_user}}</p>
-                                            @elseif($userRep->type_of_user == 'admin')
-                                                <p style="color: yellow; font-size: 20px; font-weight: bold" class="dropdown-item">Admin: {{$userRep->name_user}}</p>
-                                            @endif
-                                            <p style="color: lightsalmon; font-size: 20px; font-weight: bold" class="dropdown-item"><i
-                                                    class="fa fa-comment"
-                                                    aria-hidden="true"></i> {{$eachOfReply->context_reply}}
-                                            </p>
-                                        @endif
+                                        @foreach($reply as $eachOfReply)
+                                            <?php
+                                            $userRep = DB::table('users') //chứa reply của độc giả
+                                            ->where('id_user', $eachOfReply->id_customer)
+                                                ->get()->first();
+                                            ?>
+                                            @if($userRep->status_user == 1 && $eachOfReply->is_valid_reply == 1)
+                                                @if($userRep->type_of_user != 2)
+                                                    <p style="color: white; font-size: 20px; font-weight: bold" class="dropdown-item">{{$userRep->name_user}}</p>
+                                                @elseif($userRep->type_of_user == 2)
+                                                    <p style="color: yellow; font-size: 20px; font-weight: bold" class="dropdown-item">Admin: {{$userRep->name_user}}</p>
+                                                @endif
+                                                <p style="color: lightsalmon; font-size: 20px; font-weight: bold" class="dropdown-item"><i
+                                                        class="fa fa-comment"
+                                                        aria-hidden="true"></i> {{$eachOfReply->context_reply}}
+                                                </p>
 
-                                        @if(Session::get('id_admin'))
-                                            <a style="color: #e63084"
-                                               href="{{URL::to('/delete-reply/'.$eachOfReply->id_reply)}}">Xóa
-                                                comment</a>
-                                            |
-                                            <a style="color: #e63084"
-                                               href="{{URL::to('/block-user/'.$eachCommentList->id_customer)}}">Khóa tài
-                                                khoản</a>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </li>
+                                                @if(Session::get('id_admin'))
+                                                    <a style="color: #e63084"
+                                                       href="{{URL::to('/admin-delete-reply/'.$eachOfReply->id_reply)}}">Xóa
+                                                        comment</a>
+                                                    |
+                                                    <a style="color: #e63084"
+                                                       href="{{URL::to('/admin-block-user/'.$eachCommentList->id_customer)}}">Khóa tài
+                                                        khoản</a>
+                                                @endif
+                                            @endif
+
+                                            @endforeach
+                                    </div>
+                                </li>
+                            @endif
                             <!--Hết Reply-->
                             <hr>
                             <hr>
-                    @endforeach
+                        @endforeach
                     <!--Hết Bình luận-->
                         <div class="social_link">
                             <ul class="sociallink_nav">
@@ -256,7 +254,7 @@
                                             <a class="media-left"
                                                href="{{URL::to('/news-detail-'.$eachOfRelevantNewsDetail->id_news)}}">
                                                 <img
-                                                    src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfRelevantNewsDetail->multimedia)))[0] ?>"
+                                                    src="{{$eachOfRelevantNewsDetail->title_img}}"
                                                     alt="">
                                             </a>
                                             <div class="media-body"><a class="catg_title"
@@ -298,8 +296,8 @@
                         <i class="fa fa-angle-left"></i>
                     </span>
                     <div>
-                        <p style=" font-size: 30px; font-weight: bold">{{$pre->title}}</p>
-                        <img src="<?php echo (explode("***<paragraph/>***", nl2br($pre->multimedia)))[0] ?>" alt=""/>
+                        <h3>{{$pre->title}}</h3>
+                        <img src="{{$pre->title_img}}" alt=""/>
                     </div>
                 </a>
                 <a class="next" href="{{URL::to('/news-detail-'.$next->id_news)}}">
@@ -307,8 +305,8 @@
                         <i class="fa fa-angle-right"></i>
                     </span>
                     <div>
-                        <p style="font-size: 30px; font-weight: bold">{{$next->title}}</p>
-                        <img src="<?php echo (explode("***<paragraph/>***", nl2br($next->multimedia)))[0] ?>" alt=""/>
+                        <h3>{{$next->title}}</h3>
+                        <img src="{{$pre->title_img}}" alt=""/>
                     </div>
                 </a>
             </nav>
@@ -330,7 +328,7 @@
                                             href="{{URL::to('/news-detail-'.$eachOfNewsEst->id_news)}}"
                                             class="media-left">
                                             <img alt=""
-                                                 src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfNewsEst->multimedia)))[0] ?>">
+                                                 src="{{$eachOfNewsEst->title_img}}">
                                         </a>
                                         <div class="media-body"><a
                                                 href="{{URL::to('/news-detail-'.$eachOfNewsEst->id_news)}}"
@@ -368,18 +366,23 @@
                                 <div class="vide_area">
                                     @foreach($videoInSameBranch as $eachOfVideoInSameBranch)
                                         <?php
-                                        $allMultimedia = explode("***<paragraph/>***", nl2br($eachOfVideoInSameBranch->multimedia)); //tách tất cả video trong mỗi bản tin
-                                        $allDescribMultimedia = explode("***<paragraph/>***", nl2br($eachOfVideoInSameBranch->describ_multimedia)); //tách tất cả mô tả video trong mỗi bản tin
+                                        $product = DB::table('product')
+                                            ->where('id_product',$eachOfVideoInSameBranch->id_product)
+                                            ->get()
+                                            ->first();  //lấy ra product duy nhất ứng với news
+                                        $vid = DB::table('multimedia')
+                                            ->where('id_product',$product->id_product)
+                                            ->where('type_multi',2)
+                                            ->get();    //lấy ra tất cả video
                                         ?>
-                                        @for($index = 0; $index < count($allMultimedia) ; $index++)
+                                        @foreach($vid as $each_of_vid)
                                             <iframe width="320" height="180"
-                                                    src="{{$allMultimedia[$index]}}"
+                                                    src="{{$each_of_vid->url_multi}}"
                                                     frameborder="0"
                                                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                                     allowfullscreen>
-                                                {{$allDescribMultimedia[$index]}}
                                             </iframe>
-                                        @endfor
+                                        @endforeach
                                     @endforeach
                                 </div>
                             </div>
@@ -398,7 +401,7 @@
                                                     <a href="{{URL::to('/news-detail-'.$eachOfComment->id_news)}}"
                                                        class="media-left">
                                                         <img alt=""
-                                                             src="<?php echo (explode("***<paragraph/>***", nl2br($eachOfRelevantNewsDetail->multimedia)))[0] ?>">
+                                                             src="{{$eachOfRelevantNewsDetail->title_img}}">
                                                     </a>
                                                     <?php
                                                     $commentPeople = DB::table('users')
@@ -419,62 +422,6 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                    <div class="single_sidebar wow fadeInDown">
-                        <h2><span>Đại dịch Covid-19</span></h2>
-                        <div style="height: 350px; overflow: scroll">
-                            <?php
-                            $url = 'https://tygia.com/app/covid-19/api.json?type=2';
-                            $ch = curl_init();
-                            curl_setopt($ch, CURLOPT_URL, $url);
-                            curl_setopt($ch, CURLOPT_HTTPHEADER, Array("User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.15) Gecko/20080623 Firefox/2.0.0.15"));
-                            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-                            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                            $result = curl_exec($ch);
-                            curl_close($ch);
-                            $info = json_decode($result, true);
-                            ?>
-                            <table style="border: 1px solid black">
-                                <tr style="border: white">
-                                    <th style="border: 1px solid black; color: #fd7605">Nghiêm trọng</th>
-                                    <th style="border: 1px solid black; color: red">Tử vong</th>
-                                    <th style="border: 1px solid black; color: green">Khỏi bệnh</th>
-                                    <th style="border: 1px solid black;  color: blue">Nhiễm</th>
-                                    <th style="border: 1px solid black">Quốc gia</th>
-                                </tr>
-                                @for ($i = 1; $i < count($info["items"]); $i++)
-                                    <tr style="border: white">
-                                        @foreach ($info["items"][$i] as $key => $value)
-                                            @if ($key != "changed")
-                                                <th style="border: 1px solid black">
-                                                    <?php print_r($value . "\t" . " ") // print all data
-                                                    ?>
-                                                </th>
-                                            @endif
-                                        @endforeach
-                                    </tr>
-                                @endfor
-                            </table>
-                        </div>
-                        <h2><span>Danh mục khác</span></h2>
-                        <select class="catgArchive">
-                            <option>Danh mục khác</option>
-                            <?php
-                            $main = DB::table('main_category')->get();
-                            ?>
-                            @foreach($main as $eachOfMain)
-                                <option>{{$eachOfMain->name_main}}</option>
-                            @endforeach
-                        </select>
-
-                    </div>
-                    <div class="single_sidebar wow fadeInDown">
-                        <h2><span>Thời tiết - Giá Vàng - Tỷ giá</span></h2>
-                        <iframe frameborder="0" marginwidth="0" marginheight="0"
-                                src="http://thienduongweb.com/tool/weather/?r=1&w=1&g=1&d=0" width="100%" height="370"
-                                scrolling="yes"></iframe>
                     </div>
                 </aside>
             </div>

@@ -16,6 +16,7 @@ class ProductController extends Controller
 
             $all_seller_products = DB::table('product')
                 ->where('id_user',Session::get('id_seller'))
+                ->orderBy('id_product','DESC')
                 ->get();
 
             return view('seller.product_controller.all_seller_products')
@@ -37,13 +38,12 @@ class ProductController extends Controller
     public function save_product(Request $request){
         if (Session::get('id_seller')) {
             $brand_name = $request->brand_name;
-            $situation = $request->situation;
             $product_name = $request->product_name;
             $product_descrb = $request->product_descrb;
 
-            DB::insert('insert into product (brand_name,id_user,situation,product_name,product_descrb)
-                        values (?,?,?,?,?)'
-                , [$brand_name,Session::get('id_seller'),$situation,$product_name,$product_descrb]);
+            DB::insert('insert into product (brand_name,id_user,product_name,product_descrb)
+                        values (?,?,?,?)'
+                , [$brand_name,Session::get('id_seller'),$product_name,$product_descrb]);
 
 
             return Redirect::to('/seller-product-management');
@@ -86,6 +86,7 @@ class ProductController extends Controller
             $all_multimedia = DB::table('multimedia')
                 ->join('product','multimedia.id_product','=','product.id_product')
                 ->where('product.id_user',Session::get('id_seller'))
+                ->orderBy('multimedia.id_multimedia','DESC')
                 ->get();
 
             return view('seller.product_controller.all_seller_multimedia')

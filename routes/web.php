@@ -12,7 +12,9 @@ Route::get('/login-check','LoginController@login_check');
 Route::get('/signup','LoginController@signup');
 Route::get('/signup-check','LoginController@signup_check');
 Route::get('/logout','LoginController@logout');
-
+//comment, reply
+Route::get('/comment','CommentReplyController@comment');
+Route::get('/reply','CommentReplyController@reply');
 
 //Trang dành cho người mua
 //hiển thị các sản phẩm theo main, branch, hiển thị chi tiết
@@ -29,14 +31,12 @@ Route::get('/view-all-bookmark','BuyerController\BookmarkedController@viewAllUse
 
 //comment
 Route::get('/view-all-comment','BuyerController\CommentReplyController@viewAllUserComment');
-Route::get('/comment','BuyerController\CommentReplyController@comment');
-Route::get('/reply','BuyerController\CommentReplyController@reply');
 
 //tìm kiếm bài viết
 Route::get('/search-news','BuyerController\NewsController@searchNews');
 
 //notification
-Route::get('/view-notification','BuyerController\NotificationController@viewAllNotification');
+Route::get('/user-view-notification','BuyerController\NotificationController@viewAllNotification');
 Route::get('/mark-as-read-notification-{id_notification}','BuyerController\NotificationController@markAsReadNotification');
 
 //chat
@@ -44,8 +44,8 @@ Route::get('/view-all-chats','BuyerController\ChatController@ViewAllChats');
 Route::get('/view-chat-detail-{id_chat}','BuyerController\ChatController@ViewChatDetail');
 Route::post('/send-msg','BuyerController\ChatController@SendMsg');
 //thay đổi thông tin cá nhân người dùng
-Route::get('/change-user-information','BuyerController\UserController@changeUserInformation');
-Route::get('/alter-user-information','BuyerController\UserController@alterUserInformation');
+Route::get('/change-user-information','BuyerController\UsersInformationController@changeUserInformation');
+Route::post('/alter-user-information','BuyerController\UsersInformationController@alterUserInformation');
 
 
 //Trang dành cho người bán
@@ -58,6 +58,10 @@ Route::get('/seller-unactive-news/{id_news}','SellerController\NewsController@un
 Route::get('/seller-active-news/{id_news}','SellerController\NewsController@activeNews');
 Route::get('/seller-edit-news/{id_news}','SellerController\NewsController@editNews');
 Route::post('/seller-submit-edit-news','SellerController\NewsController@submitEditNews');
+
+//Chat
+Route::get('/seller-all-chat','BuyerController\ChatController@view_all_chat');
+Route::get('/chat-with-{id_user}','BuyerController\ChatController@chat_with');
 
 //Quản lý ảnh và sản phẩm
 Route::get('/seller-multimedia-management','SellerController\ProductController@multimedia_management');

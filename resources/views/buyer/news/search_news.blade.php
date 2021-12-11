@@ -1,4 +1,4 @@
-@extends('welcome')
+@extends('header_footer')
 @section('news_detail')
     <form role="form" action="{{URL::to('/search-news')}}"
           method="get">
@@ -11,13 +11,13 @@
             </div>
             <div class="form-group">
                 <label>Từ ngày</label>
-                <input type="datetime-local" name="dateFrom" id="dateFrom">
+                <input value="{{str_replace(" ","T",$dateFrom)}}" type="datetime-local" name="dateFrom" id="dateFrom">
 
             </div>
 
             <div class="form-group">
                 <label>Đến ngày</label>
-                <input type="datetime-local" name="dateTo" id="dateTo">
+                <input value="{{str_replace(" ","T",$dateTo)}}" type="datetime-local" name="dateTo" id="dateTo">
             </div>
         </div>
         <button>Tìm kiếm</button>
@@ -59,14 +59,14 @@
                         <a href="{{URL::to('/branch-result-'.$cat->id_main_category) }}">{{$cat->name_main}}</a>
                     </td>
                     <td>
-                        {{strlen($eachOfSearchNews->context) > 100 ? substr($eachOfSearchNews->context,0,95).'...' : $eachOfSearchNews->context}}
+                        {{strlen($eachOfSearchNews->news_context) > 100 ? substr($eachOfSearchNews->news_context,0,95).'...' : $eachOfSearchNews->news_context}}
                     </td>
                     <td>
                         {{$eachOfSearchNews->publish_date}}
                     </td>
                     <td>
                         <a href="{{URL::to('/news-detail-'.$eachOfSearchNews->id_news) }}">
-                            <img height="100" width="100" src="{{$eachOfSearchNews->multimedia}}" class="img-fluid">
+                            <img height="100" width="100" src="{{$eachOfSearchNews->title_img}}" class="img-fluid">
                         </a>
                     </td>
                 </tr>
@@ -75,12 +75,4 @@
             </table>
         </div>
     </div>
-{{--    <iframe width="560" height="315"--}}
-{{--            src="https://www.youtube.com/embed/v0wLWbN5sAo"--}}
-{{--            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>--}}
-{{--    </iframe>--}}
-
-{{--    <iframe width="560" height="315" src="https://www.youtube.com/embed/ZicURsm2Q8c"--}}
-{{--            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>--}}
-{{--    </iframe>--}}
 @endsection

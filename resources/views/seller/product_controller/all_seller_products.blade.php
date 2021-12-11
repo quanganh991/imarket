@@ -36,12 +36,6 @@
                                                                     </div>
 
                                                                     <div class="form-group">
-                                                                        <label for="situation">Trạng thái</label>
-                                                                        <input type="text" class="form-control"
-                                                                               name="situation" id="situation" placeholder="Trạng thái">
-                                                                    </div>
-
-                                                                    <div class="form-group">
                                                                         <label for="product_name">Tên sản phẩm</label>
                                                                         <input type="text" class="form-control"
                                                                                name="product_name" id="product_name" placeholder="Tên sản phẩm">
@@ -95,7 +89,7 @@
                                         {{$each_product->product_name}}
                                     </td>
                                     <td>
-                                        {{$each_product->product_descrb}}
+                                        {{strlen($each_product->product_descrb) > 50 ? substr($each_product->product_descrb,0,45).'...' : $each_product->product_descrb}}
                                     </td>
                                     <td>
                                         <?php
