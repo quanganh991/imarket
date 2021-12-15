@@ -83,7 +83,25 @@ class NewsController extends Controller
             ->join('branch_category', 'branch_category.id_branch_category', '=', 'news.id_branch_category')
             ->where('branch_category.id_main_category', $newsDetailMain->id_main_category)
             ->get();
+
+        $statistic = DB::table('statistic')
+            ->where('id_news',$id_news)
+            ->get();
+        $score_rated = 0;
+        $time_visited = 0;
+        foreach($statistic as $each_statistic){
+            $score_rated += $each_statistic->score_rated;
+            $time_visited += $each_statistic->times_visitted;
+        }
+        if (count($statistic) > 0) {
+            $score_rated /= count($statistic);
+        }
+
+
         return view('buyer.news.news_detail', [
+            'statistic' =>$statistic,
+            'score_rated' =>$score_rated,
+            'time_visited' =>$time_visited,
             'newsDetail' => $newsDetail,
             'newsDetailBranch' => $newsDetailBranch,
             'newsDetailMain' => $newsDetailMain,

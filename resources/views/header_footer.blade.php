@@ -42,15 +42,43 @@
                                                 ->where('notification.is_read','not seen')
                                                 ->orderBy('notification.date_noti','DESC')
                                                 ->get();
-                                            $cnt = count($allUserNotification); //số lượng thông báo mới
-                                            if($cnt) {
+                                            $cnt_notification = count($allUserNotification); //số lượng thông báo mới
+                                            if($cnt_notification != 0) {
                                                 echo 'style="color: red"';
                                             }
                                             ?>
                                             href="{{URL::to('/user-view-notification')}}">
-                                            Thông báo ({{$cnt}})
+                                            Thông báo ({{$cnt_notification}})
                                         </a>
                                     </li>
+
+                                <li>
+                                    <a
+                                        <?php
+                                        $cnt_message = [];
+                                        $all_message = DB::table('message')
+                                            ->where('id_sender',Session::get('id_user'))
+                                            ->orWhere('id_receiver',Session::get('id_user'))    //lấy tất cả tin nhắn mà có liên quan tới tôi
+                                            ->get();
+
+                                        foreach($all_message as $each_message){
+                                            $detail_message = DB::table('detail_message')
+                                                ->where('id_message',$each_message->id_message)
+                                                ->where('id_user','<>',Session::get('id_user')) #tìm các tin nhắn gửi đến tôi
+                                                ->where('has_been_read',0)
+                                                ->get();
+                                            array_push($cnt_message,count($detail_message));
+                                        }
+
+                                        if(array_sum($cnt_message) != 0) {
+                                            echo 'style="color: red"';
+                                        }
+                                        ?>
+                                        href="{{URL::to('/all-chat')}}">
+                                        Tin nhắn ({{array_sum($cnt_message)}})
+                                    </a>
+                                </li>
+
                                 @endif
                             @if(!Session::get('id_user'))
                                 <li><a href="{{URL::to('/login')}}">Login</a></li>

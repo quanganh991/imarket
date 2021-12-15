@@ -46,7 +46,8 @@ Route::post('/send-msg','BuyerController\ChatController@SendMsg');
 //thay đổi thông tin cá nhân người dùng
 Route::get('/change-user-information','BuyerController\UsersInformationController@changeUserInformation');
 Route::post('/alter-user-information','BuyerController\UsersInformationController@alterUserInformation');
-
+//Đánh giá
+Route::get('/rating','BuyerController\StatisticController@rate');
 
 //Trang dành cho người bán
 //quản lý tin
@@ -60,8 +61,10 @@ Route::get('/seller-edit-news/{id_news}','SellerController\NewsController@editNe
 Route::post('/seller-submit-edit-news','SellerController\NewsController@submitEditNews');
 
 //Chat
-Route::get('/seller-all-chat','BuyerController\ChatController@view_all_chat');
+Route::get('/all-chat','BuyerController\ChatController@view_all_chat');
 Route::get('/chat-with-{id_user}','BuyerController\ChatController@chat_with');
+Route::get('/search-chat','BuyerController\ChatController@search_chat');
+Route::post('/send-msg','BuyerController\ChatController@send_msg');
 
 //Quản lý ảnh và sản phẩm
 Route::get('/seller-multimedia-management','SellerController\ProductController@multimedia_management');
@@ -119,3 +122,6 @@ Route::get('/add-admin','AdminController\AdminController@addAdmin');
 Route::post('/save-admin','AdminController\AdminController@saveAdmin');
 //Thống kê
 Route::get('/statistic','AdminController\NewsController@statistic');
+
+#recommendation system
+Route::get('/rs','BuyerController\ProductController@all_product');

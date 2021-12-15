@@ -20,10 +20,9 @@
         <div class="col-md-4 col-xl-3 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
                 <div class="card-header">
                     <div class="input-group">
-                        <input type="text" placeholder="Search..." name="" class="form-control search">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
-                        </div>
+                        <form class="input-group" action="{{URL::to('/search-chat')}}" method="GET">
+                            <input type="text" placeholder="Search..." name="keyword" id="keyword" class="form-control search">
+                        </form>
                     </div>
                 </div>
                 <div class="card-body contacts_body">
@@ -33,18 +32,27 @@
                             $you = DB::table('users')   //các bạn
                                 ->where('id_user',$each_of_all_message->id_receiver == Session::get('id_user') ? $each_of_all_message->id_sender : $each_of_all_message->id_receiver)
                                 ->get()->first();
+
+                                $detail_message = DB::table('detail_message')
+                                    ->where('id_message',$each_of_all_message->id_message)
+                                    ->where('id_user','<>',Session::get('id_user')) #tìm các tin nhắn gửi đến tôi
+                                    ->where('has_been_read',0)
+                                    ->get();
+                                $cnt_message = count($detail_message);
                             ?>
                         <li class="active">
+                            <a href="{{URL::to('/chat-with-'.$you->id_user)}}">
                             <div class="d-flex bd-highlight">
                                 <div class="img_cont">
                                     <img src="{{$you->avatar}}" class="rounded-circle user_img">
                                     <span class="online_icon"></span>
                                 </div>
                                 <div class="user_info">
-                                    <span>{{$you->name_user}}</span>
+                                    <span>{{$you->name_user}} ({{$cnt_message}})</span>
                                     <p>{{$each_of_all_message->last_context_msg}} {{$each_of_all_message->last_time_msg}}</p>
                                 </div>
                             </div>
+                            </a>
                         </li>
                         @endforeach
                     </ui>
@@ -71,7 +79,7 @@
                         </div>
                         <div class="user_info">
                             <span>{{$you->name_user}}</span>
-                            <p>1767 Messages</p>
+                            <p><a href="{{URL::to('/')}}">Về trang chủ</a></p>
                         </div>
                         <div class="video_cam">
                             <span><i class="fas fa-video"></i></span>
@@ -88,7 +96,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="card-body msg_card_body">
+                <a class="card-body msg_card_body">
 
 
                     @foreach($all_detail_message as $each_of_detail_message)
@@ -121,15 +129,23 @@
                         <div class="input-group-append">
                             <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
                         </div>
-                        <textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
-                        <div class="input-group-append">
-                            <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
-                        </div>
+                        <form class="form-control type_msg"  action="{{URL::to('/send-msg')}}" method="post">
+                            @csrf
+                            <input name="context_msg" id="context_msg" class="form-control type_msg" placeholder="Nhập tin nhắn...">
+                            <input hidden name="id_user" id="id_user" value="{{$me->id_user}}">
+                            <input hidden name="id_message" id="id_message" value="{{$message->id_message}}">
+                            <input hidden name="your_id" id="your_id" value="{{$you->id_user}}">
+
+                            <button class="input-group-append">
+                                <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
+                            </button>
+                        </form>
+
                     </div>
+                    <a href="{{URL::previous()}}">Quay lại</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </body>
 </html>
