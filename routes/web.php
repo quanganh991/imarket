@@ -124,4 +124,4 @@ Route::post('/save-admin','AdminController\AdminController@saveAdmin');
 Route::get('/statistic','AdminController\NewsController@statistic');
 
 #recommendation system
-Route::get('/rs','BuyerController\ProductController@all_product');
+Route::get('/rs','EvaluateController@evaluate');

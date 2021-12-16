@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BuyerController;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\EvaluateController;
 use Illuminate\Http\Request,Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -16,7 +17,6 @@ class HomeController extends Controller
         $newsSearch_newest = DB::table('news') //chứa 5 tin tức mới nhất để chạy trên thanh trượt dài dài
             ->join('product','news.id_product','=','product.id_product')
             ->orderBy('latest_update', 'DESC')
-            ->take(5)
             ->get();
 
         //2. Lấy tất cả tin tức theo giá (Được quan tâm nhất)
@@ -30,7 +30,6 @@ class HomeController extends Controller
             ->join('branch_category', 'branch_category.id_branch_category', '=', 'news.id_branch_category')
             ->where('branch_category.id_main_category', $allMain[0]->id_main_category)
             ->orderBy('latest_update', 'DESC')
-            ->take(5)
             ->get();
 
 
@@ -38,7 +37,6 @@ class HomeController extends Controller
         ->join('branch_category', 'branch_category.id_branch_category', '=', 'news.id_branch_category')
             ->where('branch_category.id_main_category', $allMain[1]->id_main_category)
             ->orderBy('latest_update', 'DESC')
-            ->take(5)
             ->get();
 
 
@@ -46,7 +44,6 @@ class HomeController extends Controller
         ->join('branch_category', 'branch_category.id_branch_category', '=', 'news.id_branch_category')
             ->where('branch_category.id_main_category', $allMain[2]->id_main_category)
             ->orderBy('latest_update', 'DESC')
-            ->take(5)
             ->get();
 
 
@@ -54,14 +51,12 @@ class HomeController extends Controller
             ->join('branch_category', 'branch_category.id_branch_category', '=', 'news.id_branch_category')
             ->where('branch_category.id_main_category', $allMain[3]->id_main_category)
             ->orderBy('latest_update', 'DESC')
-            ->take(5)
             ->get();
 
         $newsSearch_main4 = DB::table('news') //chứa 5 tin tức mới nhất về main 4
         ->join('branch_category', 'branch_category.id_branch_category', '=', 'news.id_branch_category')
             ->where('branch_category.id_main_category', $allMain[4]->id_main_category)
             ->orderBy('latest_update', 'DESC')
-            ->take(5)
             ->get();
 
         //4. Lấy các bình luận hot nhất
@@ -71,7 +66,13 @@ class HomeController extends Controller
             ->orderBy('coment.likes_coment','DESC')
             ->get();
 
-
+        $newsSearch_newest = EvaluateController::evaluate($newsSearch_newest)->take(5);
+        $newsSearch_price = EvaluateController::evaluate($newsSearch_price);
+        $newsSearch_main0 = EvaluateController::evaluate($newsSearch_main0)->take(5);
+        $newsSearch_main1 = EvaluateController::evaluate($newsSearch_main1)->take(5);
+        $newsSearch_main2 = EvaluateController::evaluate($newsSearch_main2)->take(5);
+        $newsSearch_main3 = EvaluateController::evaluate($newsSearch_main3)->take(5);
+        $newsSearch_main4 = EvaluateController::evaluate($newsSearch_main4)->take(5);
 
         return view('buyer.home')
             ->with('all_main',$allMain)

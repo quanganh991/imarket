@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\BuyerController;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request,Illuminate\Support\Facades\DB;
-
+use App\Http\Controllers\EvaluateController;
 class NewsController extends Controller
 {
     public function ViewBranchList($id_main){
@@ -14,10 +15,9 @@ class NewsController extends Controller
                 ->first();  //chứa $id_main
             $branchSearch = DB::table('branch_category')->where('id_main_category', $id_main)->get();   //chứa tất cả các branch có $id_main
             $newsSearch = DB::table('news') //chứa 5 tin tức mới nhất có $id_main
-            ->join('branch_category', 'branch_category.id_branch_category', '=', 'news.id_branch_category')
+                ->join('branch_category', 'branch_category.id_branch_category', '=', 'news.id_branch_category')
                 ->where('branch_category.id_main_category', $id_main)
                 ->orderBy('latest_update', 'DESC')
-                ->take(6)
                 ->get();
             $newsSearchCheapest = DB::table('news') //chứa 4 tin tức có giá rẻ nhất có $id_main
                 ->join('branch_category', 'branch_category.id_branch_category', '=', 'news.id_branch_category')
@@ -33,14 +33,23 @@ class NewsController extends Controller
                 ->join('branch_category', 'branch_category.id_branch_category', '=', 'news.id_branch_category')
                 ->where('branch_category.id_main_category', $id_main)
                 ->get();
+
+            //Dự đoán
+
+//            $newsSearch = $newsSearch->take(6);
+//            $newsSearchCheapest = $newsSearchCheapest->take(6);
+
+            $newsSearch = EvaluateController::evaluate($newsSearch)->take(6);
+            $newsSearchCheapest = EvaluateController::evaluate($newsSearchCheapest);
+
             return view('buyer.news.branch_list', [
-                'branchSearch' => $branchSearch,
-                'newsSearch' => $newsSearch,
-                'mainSearch' => $mainSearch,
-                'newsSearchCheapest' => $newsSearchCheapest,
-                'newsSearchProductImageOnly' => $newsSearchProductImageOnly,
-                'newsSearchProductVideoOnly' => $newsSearchProductVideoOnly,
-            ]);
+                    'branchSearch' => $branchSearch,
+                    'newsSearch' => $newsSearch,
+                    'mainSearch' => $mainSearch,
+                    'newsSearchCheapest' => $newsSearchCheapest,
+                    'newsSearchProductImageOnly' => $newsSearchProductImageOnly,
+                    'newsSearchProductVideoOnly' => $newsSearchProductVideoOnly,
+                ]);
     }
     public function ViewNewsList($id_branch){
         $branchSearch = DB::table('branch_category')->where('id_branch_category', $id_branch)->get()->first();   //chứa $id_branch
@@ -53,7 +62,6 @@ class NewsController extends Controller
         //Sắp xếp theo giá rẻ nhất
         $newsSearchPopular = DB::table('news')->where('id_branch_category', $id_branch)
             ->orderBy('price', 'DESC')
-            ->take(6)
             ->get();
         //Ảnh
         $newsSearchImageOnly = DB::table('news') //chứa các tin tức chỉ toàn ảnh có $id_branch
@@ -63,6 +71,10 @@ class NewsController extends Controller
         $newsSearchVideoOnly = DB::table('news') //chứa các tin tức chỉ toàn video có $id_branch
             ->where('id_branch_category', $id_branch)
             ->get();
+
+        $newsSearch = EvaluateController::evaluate($newsSearch);
+        $newsSearchPopular = EvaluateController::evaluate($newsSearchPopular)->take(6);
+
         return view('buyer.news.news_list', [
             'newsSearch' => $newsSearch,
             'branchSearch' => $branchSearch,
@@ -97,6 +109,7 @@ class NewsController extends Controller
             $score_rated /= count($statistic);
         }
 
+        $relevantNewsDetail = EvaluateController::evaluate($relevantNewsDetail);
 
         return view('buyer.news.news_detail', [
             'statistic' =>$statistic,
@@ -130,12 +143,16 @@ class NewsController extends Controller
                 ->whereDate('publish_date', '>', $dateFrom)
                 ->whereDate('publish_date', '<', $dateTo)
                 ->get();
+            $search_news = EvaluateController::evaluate($search_news);
+
         } else {
             $search_news = DB::table('news')
                 ->where('title',$keyword)
                 ->whereDate('publish_date', '>', $dateFrom)
                 ->whereDate('publish_date', '<', $dateTo)
                 ->get();
+            $search_news = EvaluateController::evaluate($search_news);
+
         }
         return view('buyer.news.search_news')
             ->with('search_news',$search_news)

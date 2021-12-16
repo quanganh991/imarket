@@ -83,6 +83,7 @@
                                     <?php
                                     $newsSearch3 = DB::table('news')
                                         ->where('id_branch_category', $branchSearch[0]->id_branch_category)->get();
+                                    $newsSearch3 = App\Http\Controllers\EvaluateController::evaluate($newsSearch3);
                                     ?>
                                     @foreach($newsSearch3 as $key => $eachOfNewsSearch3)
                                         @if($key!=0)
@@ -136,6 +137,7 @@
                                             <?php
                                             $newsSearch5 = DB::table('news')
                                                 ->where('id_branch_category', $branchSearch[1]->id_branch_category)->get();
+                                            $newsSearch5 = App\Http\Controllers\EvaluateController::evaluate($newsSearch5);
                                             ?>
                                             @foreach($newsSearch5 as $key => $eachOfNewsSearch5)
                                                 @if($key!=0)
@@ -186,6 +188,7 @@
                                             <?php
                                             $newsSearch7 = DB::table('news')
                                                 ->where('id_branch_category', $branchSearch[2]->id_branch_category)->get();
+                                            $newsSearch7 = App\Http\Controllers\EvaluateController::evaluate($newsSearch7);
                                             ?>
                                             @foreach($newsSearch7 as $key => $eachOfNewsSearch7)
                                                 @if($key!=0)

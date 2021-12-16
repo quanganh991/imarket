@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BuyerController;
 use App\Http\Controllers\Controller;
 
+use App\Http\Controllers\EvaluateController;
 use Illuminate\Http\Request,Illuminate\Support\Facades\Session,Illuminate\Support\Facades\DB,Illuminate\Support\Facades\Redirect;
 
 class BookmarkedController extends Controller
@@ -58,6 +59,7 @@ class BookmarkedController extends Controller
                 ->join('news','bookmarked.id_news','=','news.id_news')
                 ->where('bookmarked.id_customer',Session::get('id_user'))
                 ->get();
+            $allUserBookmark = EvaluateController::evaluate($allUserBookmark);
             return view('buyer.news.viewAllBookmark',[
                 'allUserBookmark'=> $allUserBookmark
             ]);
