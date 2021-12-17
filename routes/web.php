@@ -10,7 +10,7 @@ Route::get('/welcome-admin','AdminController\HomeController@welcomeAdmin');
 Route::get('/login','LoginController@login');
 Route::get('/login-check','LoginController@login_check');
 Route::get('/signup','LoginController@signup');
-Route::get('/signup-check','LoginController@signup_check');
+Route::post('/signup-check','LoginController@signup_check');
 Route::get('/logout','LoginController@logout');
 //comment, reply
 Route::get('/comment','CommentReplyController@comment');
@@ -123,5 +123,24 @@ Route::post('/save-admin','AdminController\AdminController@saveAdmin');
 //Thống kê
 Route::get('/statistic','AdminController\NewsController@statistic');
 
-#recommendation system
-Route::get('/rs','EvaluateController@evaluate');
+
+//Đơn hàng
+//Buyer
+//đơn hàng chi tiết của user
+Route::get('/user-view-order-detail-{id_oder}','BuyerController\OrderController@viewUserOrderDetail');
+
+//đơn hàng tổng quát của user
+Route::get('/user-view-order','BuyerController\OrderController@viewUserOrder');
+Route::get('/user-cancel-order-{id_oder_detail}','BuyerController\OrderController@cancelUserOrder');
+
+//Seller
+//đơn hàng chi tiết
+Route::get('/view-order-detail-{id_oder}','SellerController\OrderController@viewOrderDetail');
+Route::get('/edit-order-detail-{id_oder_detail}','SellerController\OrderController@editOrderDetail');
+Route::get('/submit-edit-order-detail','SellerController\OrderController@submitEditOrderDetail');
+
+//đơn hàng tổng quát
+Route::get('/view-order','SellerController\OrderController@viewOrder');
+Route::get('/approve-order-{id_oder_detail}','SellerController\OrderController@approveOrder');
+Route::get('/unapprove-order-{id_oder_detail}','SellerController\OrderController@unApproveOrder');
+Route::get('/succeed-order-{id_oder_detail}','SellerController\OrderController@succeedOrder');

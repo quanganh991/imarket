@@ -63,7 +63,7 @@
                             <p>
                                 Quản lý
                                 <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">4</span>
+                                <span class="badge badge-info right">5</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -92,6 +92,13 @@
                                 <a href="{{URL::to('/seller-product-management')}}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Quản lý sản phẩm</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{URL::to('/view-order')}}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Quản lý đơn hàng</p>
                                 </a>
                             </li>
                         </ul>

@@ -50,12 +50,32 @@ class LoginController extends Controller
         }
     }
 
-    public function signup(){
+    public function signup_check(Request $request){
+        $name = $request->customer_name;
+        $email = $request->customer_email;
+        $password = $request->customer_password;
+        $phone = $request->customer_phone;
+        $address = $request->customer_address;
+        $avatar = $request->customer_avatar;
+        $job = $request->customer_job;
+        $result = DB::table('users')->where('email',$email)->first();
 
+        //Nếu đăng ký đúng và sai
+        if ($result == null) $check = true; //ko tìm thấy thì check đúng
+        else $check = false;
+
+        if($result){    //nếu email đã tồn tại (được tìm thấy trong csdl)
+            $alert = 'Tài khoản đã tồn tại';
+            return view('signup', compact('check', 'alert'));
+        }else{  //nếu ko tìm thấy email trong csdl-> Hợp lệ
+            Session::put('email',$email);
+            DB::insert('insert into users (name_user, email, password, address, phone_number, avatar,job,type_of_user,status_user) values (?, ?, ?, ?, ?, ?, ?,?,?)', [$name, $email,$password, $address, $phone, $avatar, $job,1,1]);
+            return redirect('/');
+        }
     }
 
-    public function signup_check(){
-
+    public function signup(){
+        return view('signup');
     }
 
     public function logout(){

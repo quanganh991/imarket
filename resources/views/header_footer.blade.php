@@ -101,6 +101,7 @@
                                         <a class="dropdown-item" href="{{URL::to('/change-user-information')}}">User Information</a>
                                         <a class="dropdown-item" href="{{URL::to('/view-all-bookmark')}}">Bookmarked</a>
                                         <a class="dropdown-item" href="{{URL::to('/view-all-comment')}}">Your Comments</a>
+                                        <a class="dropdown-item" href="{{URL::to('/user-view-order')}}">Your Orders</a>
                                     </div>
                                 </li>
                             @elseif(Session::get('id_admin'))
@@ -235,6 +236,7 @@
     @yield('userInformation')
     @yield('viewAllBookmark')
     @yield('viewAllComment')
+    @yield('order')
 
 
     <footer id="footer">
