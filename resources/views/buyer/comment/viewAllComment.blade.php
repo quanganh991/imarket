@@ -9,7 +9,6 @@
             <th>Tiêu đề bài viết</th>
             <th>Hình ảnh bài viết</th>
             <th>Nội dung bình luận</th>
-            <th>Lượt thích bình luận</th>
         </tr>
         </thead>
         <tbody>
@@ -48,7 +47,6 @@
                         {{$eachUserComment->context_coment}}
                     </a>
                 </td>
-                <td>{{ $eachUserComment->likes_coment }}</td>
             </tr>
         @endforeach
         </tbody>
@@ -63,7 +61,6 @@
             <th>Tiêu đề bài viết</th>
             <th>Hình ảnh bài viết</th>
             <th>Nội dung phản hồi</th>
-            <th>Lượt thích phản hồi</th>
         </tr>
         </thead>
         <tbody>
@@ -106,7 +103,6 @@
                         {{$eachUserReply->context_reply}}
                     </a>
                 </td>
-                <td>{{ $eachUserReply->likes_reply }}</td>
             </tr>
         @endforeach
         </tbody>

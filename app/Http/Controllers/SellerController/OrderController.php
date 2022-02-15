@@ -34,13 +34,18 @@ class OrderController extends Controller
                 ->where('oder_detail.id_oder_detail',$id_oder_detail)
                 ->get()->first();
 
+            $news = DB::table('news')
+                ->join('product','news.id_product','=','product.id_product')
+                ->where('id_news',$oder->id_news)
+                ->get()->first();
+
             DB::table('notification')
                 ->insert(
                     ['id_user' => $oder->id_customer,
                         'link_noti' => '/user-view-order-detail-'.$oder->id_oder,
                         'is_read'=>"not seen",
                         'date_noti'=>date('Y-m-d H:i:s'),
-                    'context_noti' => "Đơn hàng " . $id_oder_detail . " đang được giao đến quý khách"]);
+                    'context_noti' => "Sản phẩm ".$news->product_name." trong đơn hàng " . $id_oder_detail . " đang được giao đến quý khách"]);
             $tb = Session::get('notification') + 1;
             Session::remove('notification');
             Session::put('notification', $tb);
@@ -62,13 +67,19 @@ class OrderController extends Controller
                 ->join('oder_detail','oder.id_oder','=','oder_detail.id_oder')
                 ->where('oder_detail.id_oder_detail', $id_oder_detail)
                 ->get()->first();
+
+            $news = DB::table('news')
+                ->join('product','news.id_product','=','product.id_product')
+                ->where('id_news',$oder->id_news)
+                ->get()->first();
+
             DB::table('notification')
                 ->insert([
                     'id_user' => $oder->id_customer,
                     'link_noti' => '/user-view-order-detail-'.$oder->id_oder,
                     'is_read'=>"not seen",
                     'date_noti'=>date('Y-m-d H:i:s'),
-                    'context_noti'=>"Đơn hàng ".$id_oder_detail." đã bị hủy"
+                    'context_noti'=>"Sản phẩm ".$news->product_name." trong đơn hàng ".$id_oder_detail." đã bị hủy"
                     ]);
             $tb = Session::get('notification') + 1;
             Session::remove('notification');
@@ -91,13 +102,18 @@ class OrderController extends Controller
                 ->where('oder_detail.id_oder_detail',$id_oder_detail)
                 ->get()->first();
 
+            $news = DB::table('news')
+                ->join('product','news.id_product','=','product.id_product')
+                ->where('id_news',$oder->id_news)
+                ->get()->first();
+
             DB::table('notification')
                 ->insert([
                     'id_user' => $oder->id_customer,
                     'link_noti' => '/user-view-order-detail-'.$oder->id_oder,
                     'is_read'=>"not seen",
                     'date_noti'=>date('Y-m-d H:i:s'),
-                    'context_noti'=>"Đơn hàng ".$id_oder_detail." đã được giao thành công"]);
+                    'context_noti'=>"Sản phẩm ".$news->product_name." trong đơn hàng ".$id_oder_detail." đã được giao thành công"]);
             $tb = Session::get('notification') + 1;
             Session::remove('notification');
             Session::put('notification', $tb);

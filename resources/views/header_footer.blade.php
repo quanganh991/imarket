@@ -31,13 +31,13 @@
                 <div class="header_top">
                     <div class="header_top_left">
                         <ul class="top_nav">
-                            <li><a href="{{URL::to('/')}}">Home</a></li>
+                            <li><a href="{{URL::to('/')}}">Trang chủ</a></li>
                                 @if(Session::get('id_user'))
                                     <li>
                                         <a
                                             <?php
                                             $allUserNotification = DB::table('notification')    //lấy hết noti ra
-                                            ->join('users','notification.id_user','=','users.id_user')
+                                                ->join('users','notification.id_user','=','users.id_user')
                                                 ->where('users.id_user', Session::get('id_user'))
                                                 ->where('notification.is_read','not seen')
                                                 ->orderBy('notification.date_noti','DESC')
@@ -81,8 +81,8 @@
 
                                 @endif
                             @if(!Session::get('id_user'))
-                                <li><a href="{{URL::to('/login')}}">Login</a></li>
-                                <li><a href="{{URL::to('/signup')}}">Signup</a></li>
+                                <li><a href="{{URL::to('/login')}}">Đăng nhập</a></li>
+                                <li><a href="{{URL::to('/signup')}}">Đăng ký</a></li>
                             @elseif(Session::get('id_buyer'))
                                 <?php
                                 $nameCustomer = DB::table('users')
@@ -97,11 +97,11 @@
                                         Hello: {{$nameCustomer->name_user}}
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="{{URL::to('/logout')}}">Logout</a>
-                                        <a class="dropdown-item" href="{{URL::to('/change-user-information')}}">User Information</a>
+                                        <a class="dropdown-item" href="{{URL::to('/logout')}}">Đăng xuất</a>
+                                        <a class="dropdown-item" href="{{URL::to('/change-user-information')}}">Thông tin cá nhân</a>
                                         <a class="dropdown-item" href="{{URL::to('/view-all-bookmark')}}">Bookmarked</a>
-                                        <a class="dropdown-item" href="{{URL::to('/view-all-comment')}}">Your Comments</a>
-                                        <a class="dropdown-item" href="{{URL::to('/user-view-order')}}">Your Orders</a>
+                                        <a class="dropdown-item" href="{{URL::to('/view-all-comment')}}">Bình luận</a>
+                                        <a class="dropdown-item" href="{{URL::to('/user-view-order')}}">Đơn hàng</a>
                                     </div>
                                 </li>
                             @elseif(Session::get('id_admin'))
@@ -118,9 +118,9 @@
                                         {{$nameAdmin->name_user}} - Admin
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="{{URL::to('/logout')}}">Logout</a>
-                                        <a class="dropdown-item" href="{{URL::to('/change-admin-information')}}">Admin Information</a>
-                                        <a class="dropdown-item" href="{{URL::to('/home-admin')}}">Go to admin homepage</a>
+                                        <a class="dropdown-item" href="{{URL::to('/logout')}}">Đăng xuất</a>
+                                        <a class="dropdown-item" href="{{URL::to('/change-admin-information')}}">Thông tin cá nhân</a>
+                                        <a class="dropdown-item" href="{{URL::to('/home-admin')}}">Đến trang dành cho Admin</a>
                                     </div>
                                 </li>
                             @elseif(Session::get('id_seller'))
@@ -134,18 +134,18 @@
                                     <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
                                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="false" style="color: red">
-                                        {{$nameSeller->name_user}} - Seller
+                                        {{$nameSeller->name_user}} - Người bán
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="{{URL::to('/logout')}}">Logout</a>
-                                        <a class="dropdown-item" href="{{URL::to('/welcome-seller')}}">Go to seller homepage</a>
+                                        <a class="dropdown-item" href="{{URL::to('/logout')}}">Đăng xuất</a>
+                                        <a class="dropdown-item" href="{{URL::to('/welcome-seller')}}">Trang dành cho người bán</a>
                                     </div>
                                 </li>
                             @endif
                             <li>
                                 <form method="GET" action="{{URL::to('/search-news')}}">
                                     <input required size="10" type="text" name="keyword" id="keyword"
-                                           placeholder="Search..."/>
+                                           placeholder="Tìm kiếm..."/>
                                 </form>
                             </li>
                         </ul>
@@ -237,6 +237,7 @@
     @yield('viewAllBookmark')
     @yield('viewAllComment')
     @yield('order')
+    @yield('cart')
 
 
     <footer id="footer">
@@ -268,7 +269,6 @@
         </div>
         <div class="footer_bottom">
             <p class="copyright">Copyright &copy; 2021 <a href="{{URL::to('/')}}">I Market</a></p>
-            <p class="developer">Developed By Wpfreeware</p>
         </div>
     </footer>
 </div>

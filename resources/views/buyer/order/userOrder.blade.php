@@ -44,19 +44,6 @@
                             <h5 style="color: red">{{$cus->name_user}}</h5>
                         </td>
                         <td>{{ $eachUserOrder->oder_date }}</td>
-{{--                        <td>--}}
-{{--                            @if($eachUserOrder->isapproved == 0) --}}{{--đơn hàng nào chưa được duyệt thì user có thể hủy--}}
-{{--                            <h5 style="color: dodgerblue">Đang chờ phê duyệt</h5>--}}
-{{--                            <a href="{{URL::to('/user-cancel-order/'.$eachUserOrder->id_oder)}}">Hủy</a>--}}
-{{--                            @elseif($eachUserOrder->isapproved == 1) --}}{{--đơn hàng đang được vận chuyển--}}
-{{--                            <h5 style="color: orangered">Đang vận chuyển</h5>--}}
-{{--                            @elseif($eachUserOrder->isapproved == 2) --}}{{--đơn hàng đã giao thành công--}}
-{{--                            <h5 style="color: green">Đã giao thành công</h5>--}}
-{{--                            @elseif($eachUserOrder->isapproved == 3) --}}{{--đơn hàng bị hủy--}}
-{{--                            <h5 style="color: black">Đơn hàng bị hủy</h5>--}}
-{{--                            @endif--}}
-
-{{--                        </td>--}}
                         <td style="color: #ba8b00">{{ $eachUserOrder->oder_note }}</td>
                         <td>{{ $eachUserOrder->province }}</td>
                         <td>{{ $eachUserOrder->totalcost }}</td>

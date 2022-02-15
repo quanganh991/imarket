@@ -28,7 +28,7 @@
                     <th>Sản phẩm</th>
                     <th>Hình ảnh</th>
                     <th>Số lượng</th>
-                    <th>Giá bìa</th>
+                    <th>Đơn giá</th>
                     <th>Đối tác giao hàng</th>
                     <th>Ngày mua</th>
                     <th>Tổng</th>

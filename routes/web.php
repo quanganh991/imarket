@@ -126,9 +126,11 @@ Route::get('/statistic','AdminController\NewsController@statistic');
 
 //Đơn hàng
 //Buyer
+Route::get('/user-make-order-{id_news}','BuyerController\OrderController@makeOrder');
+Route::get('/user-save-order','BuyerController\OrderController@saveOrder');
+
 //đơn hàng chi tiết của user
 Route::get('/user-view-order-detail-{id_oder}','BuyerController\OrderController@viewUserOrderDetail');
-
 //đơn hàng tổng quát của user
 Route::get('/user-view-order','BuyerController\OrderController@viewUserOrder');
 Route::get('/user-cancel-order-{id_oder_detail}','BuyerController\OrderController@cancelUserOrder');

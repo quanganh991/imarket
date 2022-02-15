@@ -114,6 +114,12 @@
                                         bán
                                     </button>
                                 </form>
+
+                                    <form action="{{URL::to('/user-make-order-'.$newsDetail->id_news)}}" method="get">
+                                        <input name="id_news" value="{{$newsDetail->id_news}}" type="hidden"/>
+                                        <button style="background-color: #974194" class="btn default-btn">Gửi yêu cầu mua hàng tới người bán
+                                        </button>
+                                    </form>
                             @endif
                             {{--                            <button class="btn btn-red">Red Button</button>--}}
                         </div>

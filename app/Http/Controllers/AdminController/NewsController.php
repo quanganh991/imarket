@@ -220,4 +220,14 @@ class NewsController extends Controller
             return redirect('login');
         }
     }
+
+    public function statistic(){
+        if (Session::get('id_admin')) {
+            $accessQty = DB::table('statistic_category')->get();
+            $totalRow = $accessQty->count();
+            return view('admin.session.statistic')->with('accessQty',$accessQty)->with('totalRow',$totalRow);
+        } else {
+            return redirect('login');
+        }
+    }
 }
