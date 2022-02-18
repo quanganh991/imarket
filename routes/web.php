@@ -122,7 +122,7 @@ Route::get('/add-admin','AdminController\AdminController@addAdmin');
 Route::post('/save-admin','AdminController\AdminController@saveAdmin');
 //Thống kê
 Route::get('/statistic','AdminController\NewsController@statistic');
-
+Route::get('/update-model','AdminController\NewsController@update_model');
 
 //Đơn hàng
 //Buyer

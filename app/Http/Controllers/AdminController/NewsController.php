@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\AdminController;
-
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\EvaluateController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -226,6 +227,16 @@ class NewsController extends Controller
             $accessQty = DB::table('statistic_category')->get();
             $totalRow = $accessQty->count();
             return view('admin.session.statistic')->with('accessQty',$accessQty)->with('totalRow',$totalRow);
+        } else {
+            return redirect('login');
+        }
+    }
+
+    public function update_model(){
+        if (Session::get('id_admin')) {
+            EvaluateController::retrain();
+            Storage::put("latest_update.txt", date('H:i:s d-m-Y'));
+            return redirect()->back()->with('alert','Cập nhật thành công!');
         } else {
             return redirect('login');
         }

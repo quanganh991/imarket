@@ -41,7 +41,7 @@
                             google.charts.setOnLoadCallback(drawVisualization);
 
                             var table = [
-                                ['Thời gian', 'Lượt truy cập', 'Bất động sản', 'Xe cộ', 'Đồ điện tử', 'Gia dụng, nội thất, cây cảnh','Giải trí, thể thao, sở thích','Mẹ và bé', 'Dịch vụ, du lịch'],
+                                ['Thời gian', 'Lượt truy cập', 'Bất động sản', 'Xe cộ', 'Đồ điện tử', 'Gia dụng, nội thất, cây cảnh', 'Giải trí, thể thao, sở thích', 'Mẹ và bé', 'Dịch vụ, du lịch'],
                                 ['<?php echo $date[0] ?>',<?php echo $access_quantity[0] ?>,<?php echo $bat_dong_san[0] ?>,<?php echo $xe_co[0] ?>,<?php echo $do_dien_tu[0] ?>,<?php echo $gia_dung_noi_that_cay_canh[0] ?>,<?php echo $giai_tri_the_thao_so_thich[0] ?>,<?php echo $me_va_be[0] ?>,<?php echo $dich_vu_du_lich[0] ?>],
                                 ['<?php echo $date[1] ?>',<?php echo $access_quantity[1] ?>,<?php echo $bat_dong_san[1] ?>,<?php echo $xe_co[1] ?>,<?php echo $do_dien_tu[1] ?>,<?php echo $gia_dung_noi_that_cay_canh[1] ?>,<?php echo $giai_tri_the_thao_so_thich[1] ?>,<?php echo $me_va_be[1] ?>,<?php echo $dich_vu_du_lich[1] ?>],
                                 ['<?php echo $date[2] ?>',<?php echo $access_quantity[2] ?>,<?php echo $bat_dong_san[2] ?>,<?php echo $xe_co[2] ?>,<?php echo $do_dien_tu[2] ?>,<?php echo $gia_dung_noi_that_cay_canh[2] ?>,<?php echo $giai_tri_the_thao_so_thich[2] ?>,<?php echo $me_va_be[2] ?>,<?php echo $dich_vu_du_lich[2] ?>],
@@ -58,7 +58,7 @@
                                     vAxis: {title: 'Doanh thu'},     //trục Oy
                                     hAxis: {title: 'Thời gian'},    //trục Ox
                                     seriesType: 'bars',
-                                    series: {0: {type: 'line'}, 7: {type: 'line'},3: {type: 'line'},5: {type: 'line'}}
+                                    series: {0: {type: 'line'}, 7: {type: 'line'}, 3: {type: 'line'}, 5: {type: 'line'}}
                                 };
 
                                 var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
@@ -69,6 +69,20 @@
                         <body>
                         <div id="chart_div" style="width: 1150px; height: 500px;"></div>
                         </body>
+                        <a href="{{URL::to('/update-model')}}">
+                            <div class="card-header">
+                                <h3 class="card-title">Cập nhật lại hệ gợi ý (Quá trình này có thể mất nhiều thời gian)</h3>
+                            </div>
+                        </a>
+                        <div class="card-header">
+                            <h3 class="card-title">Cập nhật gần nhất:
+                                <?php
+                                foreach(file("storage/app/latest_update.txt") as $line) {
+                                    echo $line;
+                                }
+                                ?>
+                            </h3>
+                        </div>
                     </div>
                     <!-- /.card-body -->
                 </div>

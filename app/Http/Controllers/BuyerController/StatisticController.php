@@ -37,8 +37,8 @@ class StatisticController extends Controller
                     ->where('id_user', Session::get('id_user'))
                     ->update(['score_rated' => $point]);
             } else {
-                DB::insert('insert into statistic (id_news, id_user,score_rated,times_visitted) values (?, ?, ?, ?)'
-                    , [$id_news, Session::get('id_user'),$point,1]);
+                DB::insert('insert into statistic (id_news, id_user,score_rated) values (?, ?, ?)'
+                    , [$id_news, Session::get('id_user'),$point]);
             }
             return back();
         }

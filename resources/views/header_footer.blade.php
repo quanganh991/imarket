@@ -120,7 +120,7 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" href="{{URL::to('/logout')}}">Đăng xuất</a>
                                         <a class="dropdown-item" href="{{URL::to('/change-admin-information')}}">Thông tin cá nhân</a>
-                                        <a class="dropdown-item" href="{{URL::to('/home-admin')}}">Đến trang dành cho Admin</a>
+                                        <a class="dropdown-item" href="{{URL::to('/welcome-admin')}}">Đến trang dành cho Admin</a>
                                     </div>
                                 </li>
                             @elseif(Session::get('id_seller'))

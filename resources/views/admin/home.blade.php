@@ -51,7 +51,7 @@
                     <img src="{{$resultUser->avatar}}" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
-                    <a href="{{ URL::to('/change-admin-information') }}" class="d-block">Bob</a>
+                    <a href="{{ URL::to('/change-admin-information') }}" class="d-block">{{$resultUser->name_user}}</a>
                 </div>
             </div>
 

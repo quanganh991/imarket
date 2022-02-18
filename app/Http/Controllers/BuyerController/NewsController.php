@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request,Illuminate\Support\Facades\DB;
 use App\Http\Controllers\EvaluateController;
+use Illuminate\Support\Facades\Session;
+
 class NewsController extends Controller
 {
     public function ViewBranchList($id_main){
@@ -100,10 +102,10 @@ class NewsController extends Controller
             ->where('id_news',$id_news)
             ->get();
         $score_rated = 0;
-        $time_visited = 0;
+        $times_visited = 0;
         foreach($statistic as $each_statistic){
             $score_rated += $each_statistic->score_rated;
-            $time_visited += $each_statistic->times_visitted;
+            $times_visited = $each_statistic->times_visitted + 1;
         }
         if (count($statistic) > 0) {
             $score_rated /= count($statistic);
@@ -111,10 +113,26 @@ class NewsController extends Controller
 
         $relevantNewsDetail = EvaluateController::evaluate($relevantNewsDetail);
 
+
+        if (Session::get('id_user')) {
+            $has_rated_yet = DB::table('statistic')
+                ->where('id_user',Session::get('id_user'))
+                ->where('id_news', $id_news)->get();
+
+            if (count($has_rated_yet) > 0){
+                DB::table('statistic')
+                    ->where('id_user',Session::get('id_user'))
+                    ->where('id_news', $id_news)
+                    ->update(['times_visitted' => $times_visited]);
+            } else {    #id_user chưa từng đánh giá $id_news
+                DB::insert('insert into statistic (id_news, id_user, score_rated, times_visitted) values (?, ?, ?, ?)'
+                    , [$id_news,Session::get('id_user'),(int)$score_rated,1]);
+            }
+        }
         return view('buyer.news.news_detail', [
             'statistic' =>$statistic,
             'score_rated' =>$score_rated,
-            'time_visited' =>$time_visited,
+            'time_visited' =>$times_visited,
             'newsDetail' => $newsDetail,
             'newsDetailBranch' => $newsDetailBranch,
             'newsDetailMain' => $newsDetailMain,

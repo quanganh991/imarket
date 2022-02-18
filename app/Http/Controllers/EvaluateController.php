@@ -54,6 +54,15 @@ class EvaluateController extends Controller
             return $news;
         }
     }
+
+    static function retrain(){
+        $url = "http://192.168.0.107:8000/retrain";
+        $client = new Client();
+
+        $response = $client->request('GET', $url)->getBody();
+
+        return json_decode((string)$response, true);
+    }
 }
 
 
