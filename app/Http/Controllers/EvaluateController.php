@@ -16,7 +16,7 @@ class EvaluateController extends Controller
 
         if (Session::get('id_user')) {
 
-            $url = "http://192.168.0.107:8000/evaluate";
+            $url = "http://192.168.0.106:8000/evaluate";
             $client = new Client();
             $id_news = [];
             $id_user = Session::get('id_user');
@@ -56,7 +56,7 @@ class EvaluateController extends Controller
     }
 
     static function retrain(){
-        $url = "http://192.168.0.107:8000/retrain";
+        $url = "http://192.168.0.106:8000/retrain";
         $client = new Client();
 
         $response = $client->request('GET', $url)->getBody();
